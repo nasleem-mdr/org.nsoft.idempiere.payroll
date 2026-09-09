@@ -13,6 +13,8 @@ import org.nsoft.idempiere.payroll.model.bpjs.MPayrollEmployeeProgram;
 import org.nsoft.idempiere.payroll.model.tax.MPayrollEmployeeTaxProfile;
 import org.nsoft.idempiere.payroll.model.tax.MPayrollPTKPRate;
 import org.nsoft.idempiere.payroll.model.tax.MPayrollTaxRate;
+import org.nsoft.idempiere.payroll.model.component.MPayrollComponentInput;
+import org.nsoft.idempiere.payroll.model.run.MPayrollRunLine;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -127,29 +129,21 @@ public class GeneratePayrollRun extends SvrProcess {
             EmployeeSnapshot emp = loadEmployeeSnapshot(employeeId, trxName);
 
             // ── 5a. Komponen gaji — baca ComponentInput, hitung 3 basis ──
-            List<ComponentInputRow> components = loadComponentInputs(
-                employeeId, p_PayrollPeriodID, trxName);
-
-            if (components.isEmpty()) {
+            if (!MPayrollComponentInput.hasAnyInput(employeeId, p_PayrollPeriodID, trxName)) {
                 log.log(Level.WARNING, "Employee {0} tidak punya X_Payroll_ComponentInput " +
                     "untuk periode {1} — di-skip dari run ini.",
                     new Object[]{ employeeId, p_PayrollPeriodID });
                 continue;
             }
-
-            BigDecimal cashGrossIncome = BigDecimal.ZERO;      // semua EARNING, apapun status pajaknya
-            BigDecimal taxableEarningIncome = BigDecimal.ZERO; // EARNING yang IsTaxable='Y'
-            BigDecimal bpjsBaseIncome = BigDecimal.ZERO;       // EARNING yang IsBPJSBase='Y'
-
-            for (ComponentInputRow c : components) {
+            List<MPayrollComponentInput.ResolvedInput> components =
+                MPayrollComponentInput.getResolvedInputs(employeeId, p_PayrollPeriodID, trxName);
+            
+            for (MPayrollComponentInput.ResolvedInput c : components) {
                 if ("EARNING".equals(c.componentType)) {
                     cashGrossIncome = cashGrossIncome.add(c.amount);
                     if (c.isTaxable) taxableEarningIncome = taxableEarningIncome.add(c.amount);
                     if (c.isBpjsBase) bpjsBaseIncome = bpjsBaseIncome.add(c.amount);
                 }
-                // ComponentType='DEDUCTION' — dijumlahkan terpisah kalau
-                // nanti ada kebutuhan potongan non-BPJS non-pajak (belum
-                // ada kasusnya sampai sekarang, disiapkan strukturnya saja).
             }
 
             // ── 5b. BPJS — loop generik semua program aktif ─────────────
@@ -198,9 +192,9 @@ public class GeneratePayrollRun extends SvrProcess {
 
             if (period.isDecemberReconciliation) {
                 // ── Rekonsiliasi tahunan — SELALU progresif ─────────────
-                BigDecimal annualGrossIncome = getAnnualTaxableGross(employeeId, period, trxName)
-                    .add(taxableGrossIncome); // + run Desember ini sendiri (belum ke-commit)
-                BigDecimal alreadyWithheldYTD = getAlreadyWithheldYTD(employeeId, period, trxName);
+                BigDecimal annualGrossIncome = MPayrollRunLine.getAnnualTaxableGross(employeeId, period.dateFrom, trxName)
+                    .add(taxableGrossIncome);
+                BigDecimal alreadyWithheldYTD = MPayrollRunLine.getAlreadyWithheldYTD(employeeId, period.dateFrom, trxName);
                 BigDecimal ptkpAmount = MPayrollPTKPRate.lookupAnnualAmount(
                     emp.ptkpStatus, period.dateFrom, trxName);
 
@@ -237,9 +231,9 @@ public class GeneratePayrollRun extends SvrProcess {
                     );
                 }
 
-                cumulativeGrossBeforeThisRun = getCumulativeTaxableGrossThisPeriod(
+                cumulativeGrossBeforeThisRun = MPayrollRunLine.getCumulativeTaxableGrossThisPeriod(
                     employeeId, p_PayrollPeriodID, trxName);
-                withheldPreviouslyThisPeriod = getCumulativeWithheldThisPeriod(
+                withheldPreviouslyThisPeriod = MPayrollRunLine.getCumulativeWithheldThisPeriod(
                     employeeId, p_PayrollPeriodID, trxName);
 
                 BigDecimal combinedGross = cumulativeGrossBeforeThisRun.add(taxableGrossIncome);
@@ -269,8 +263,8 @@ public class GeneratePayrollRun extends SvrProcess {
                 cumulativeGrossBeforeThisRun, withheldPreviouslyThisPeriod,
                 totalDeduction, netIncome, adClientId, adOrgId, adUserId, trxName);
 
-            for (ComponentInputRow c : components) {
-                insertRunLineComponent(runLineId, c, adClientId, adOrgId, adUserId, trxName);
+            for (MPayrollComponentInput.ResolvedInput c : components) {
+                insertRunLineComponent(runLineId, c.componentId, c.amount, adClientId, adOrgId, adUserId, trxName);
             }
             for (BpjsDetailResult detail : bpjsDetails) {
                 insertRunLineDetail(runLineId, detail, adClientId, adOrgId, adUserId, trxName);
