@@ -16,29 +16,41 @@ import org.nsoft.idempiere.payroll.model.tax.MPayrollTaxRate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * AD_Process: X_GeneratePayrollRun
- * Parameter: X_Payroll_Period_ID (mandatory)
+ * Parameter: X_Payroll_Period_ID (mandatory), RunType (mandatory,
+ *            default 'REGULAR' — REGULAR/BONUS/THR/OFF_CYCLE)
  *
- * Satu proses = satu transaksi DB penuh (SvrProcess otomatis jalan dalam
- * 1 Trx via get_TrxName()). Kalau satu employee gagal dihitung di tengah
- * jalan, SELURUH run rollback — tidak ada kondisi "5 dari 10 employee
- * sudah ke-commit". Ini alasan utama kenapa proses ini server-side,
- * bukan rangkaian POST dari React.
+ * Satu proses = satu transaksi DB penuh. Gagal di tengah = rollback
+ * total (tidak ada kondisi "5 dari 10 employee sudah ke-commit").
  *
- * ASUMSI SAAT INI: struktur gaji FLAT (1 angka GrossIncome per employee,
- * diambil dari kolom X_MonthlyGrossIncome di HR_Employee — GANTI method
- * calculateGrossIncome() kalau nanti struktur berubah jadi komponen
- * bertingkat, lihat komentar di method itu).
+ * STRUKTUR GAJI: KOMPONEN. GrossIncome TIDAK diambil dari satu kolom
+ * tetap, tapi dihitung dari X_Payroll_ComponentInput (input HR sebelum
+ * run) yang di-snapshot ke X_Payroll_RunLineComponent.
+ *
+ * TIGA MAKNA INCOME YANG BERBEDA (lihat komentar di masing2 method):
+ *   - CashGrossIncome    → basis take-home pay (NetIncome)
+ *   - TaxableGrossIncome → basis lookup TER/Progresif (termasuk natura BPJS)
+ *   - BPJSBaseIncome     → basis hitung iuran BPJS (sebelum capping)
+ *
+ * MULTI-RUN PER PERIODE: PPh21 dihitung KUMULATIF terhadap run lain
+ * (RunType berbeda, mis. BONUS lalu REGULAR) yang sudah Complete di
+ * periode yang sama. BPJS TIDAK kumulatif — basis per run saja.
  */
 public class GeneratePayrollRun extends SvrProcess {
 
+    private static final java.util.logging.Logger log =
+        java.util.logging.Logger.getLogger(GeneratePayrollRun.class.getName());
+
     private int p_PayrollPeriodID = 0;
+    private String p_RunType = "REGULAR";
 
     @Override
     protected void prepare() {
@@ -46,6 +58,9 @@ public class GeneratePayrollRun extends SvrProcess {
             String name = para.getParameterName();
             if (name.equals("X_Payroll_Period_ID")) {
                 p_PayrollPeriodID = para.getParameterAsInt();
+            } else if (name.equals("RunType")) {
+                String val = para.getParameterAsString();
+                if (val != null && !val.trim().isEmpty()) p_RunType = val.trim();
             }
         }
         if (p_PayrollPeriodID <= 0) {
@@ -56,35 +71,46 @@ public class GeneratePayrollRun extends SvrProcess {
     @Override
     protected String doIt() throws Exception {
         String trxName = get_TrxName();
+        int adClientId = Env.getAD_Client_ID(getCtx());
+        int adOrgId = Env.getAD_Org_ID(getCtx());
+        int adUserId = Env.getAD_User_ID(getCtx());
 
-        // ── 1. Load period + guard idempotency ──────────────────────────
+        // ── 1. Load period + guard ────────────────────────────────────
         PeriodInfo period = loadPeriod(p_PayrollPeriodID, trxName);
         if ("CO".equals(period.docStatus)) {
             throw new IllegalStateException(
-                "Periode " + period.periodName + " sudah diproses. " +
-                "Void/reverse run yang ada dulu kalau perlu diproses ulang."
+                "Periode " + period.periodName + " sudah DITUTUP. " +
+                "Buka kembali periode dulu kalau perlu proses run tambahan."
             );
         }
 
-        // ── 2. Buat header X_Payroll_Run ─────────────────────────────────
-        int runId = DB.getSQLValueEx(trxName,
-            "SELECT nextval('X_Payroll_Run_seq')");
-        int adClientId = Env.getAD_Client_ID(getCtx());
-        int adOrgId = Env.getAD_Org_ID(getCtx());
+        // ── 2. Guard duplikasi RunType — cegah run tipe SAMA diproses
+        //    dua kali untuk periode yang sama (BUKAN mencegah kombinasi
+        //    RunType berbeda seperti REGULAR+BONUS) ────────────────────
+        String existingStatus = DB.getSQLValueStringEx(trxName,
+            "SELECT DocStatus FROM X_Payroll_Run WHERE X_Payroll_Period_ID=? AND RunType=? " +
+            "AND DocStatus IN ('DR','CO') ORDER BY Created DESC LIMIT 1",
+            p_PayrollPeriodID, p_RunType);
+        if (existingStatus != null) {
+            throw new IllegalStateException(
+                "Run tipe '" + p_RunType + "' untuk periode ini sudah ada (status: " +
+                existingStatus + "). Void run yang ada dulu kalau perlu diproses ulang."
+            );
+        }
 
+        // ── 3. Buat header X_Payroll_Run ──────────────────────────────
+        int runId = DB.getSQLValueEx(trxName, "SELECT nextval('X_Payroll_Run_seq')");
         DB.executeUpdateEx(
             "INSERT INTO X_Payroll_Run " +
             "(X_Payroll_Run_ID, AD_Client_ID, AD_Org_ID, IsActive, " +
             " Created, CreatedBy, Updated, UpdatedBy, " +
-            " X_Payroll_Period_ID, ProcessedDate, DocStatus) " +
-            "VALUES (?, ?, ?, 'Y', now(), ?, now(), ?, ?, now(), 'DR')",
-            new Object[]{ runId, adClientId, adOrgId, getAD_User_ID(), getAD_User_ID(), p_PayrollPeriodID },
+            " X_Payroll_Period_ID, RunType, ProcessedDate, DocStatus) " +
+            "VALUES (?, ?, ?, 'Y', now(), ?, now(), ?, ?, ?, now(), 'DR')",
+            new Object[]{ runId, adClientId, adOrgId, adUserId, adUserId, p_PayrollPeriodID, p_RunType },
             trxName
         );
 
-        // ── 3. Preload rate/bracket — SEKALI per run, bukan per employee ──
-        // Query rate di dalam loop employee akan sangat lambat untuk
-        // jumlah karyawan besar; load sekali di luar loop.
+        // ── 4. Preload rate/bracket sekali di luar loop ───────────────
         List<TaxBracket> terBrackets = MPayrollTaxRate.getActiveBracketsAsTaxBracket(
             "TER", period.dateFrom, trxName);
         List<TaxBracket> progressiveBrackets = period.isDecemberReconciliation
@@ -93,71 +119,43 @@ public class GeneratePayrollRun extends SvrProcess {
         List<MPayrollBPJSRate> activeBpjsRates = MPayrollBPJSRate.getActiveRatesForDate(
             period.dateFrom, trxName);
 
-        // ── 4. Loop tiap employee aktif ───────────────────────────────────
+        // ── 5. Loop tiap employee aktif ────────────────────────────────
         List<Integer> employeeIds = getActiveEmployeeIds(trxName);
         int processedCount = 0;
 
         for (int employeeId : employeeIds) {
             EmployeeSnapshot emp = loadEmployeeSnapshot(employeeId, trxName);
 
-            BigDecimal grossIncome = calculateGrossIncome(employeeId, period, trxName);
+            // ── 5a. Komponen gaji — baca ComponentInput, hitung 3 basis ──
+            List<ComponentInputRow> components = loadComponentInputs(
+                employeeId, p_PayrollPeriodID, trxName);
 
-            // ── 4a. PPh21 ───────────────────────────────────────────────
-            BigDecimal pph21;
-            String terCategoryUsed = null;
-            BigDecimal terRateUsed = null;
-
-            MPayrollEmployeeTaxProfile taxProfile =
-                MPayrollEmployeeTaxProfile.getActiveProfile(employeeId, period.dateFrom, trxName);
-            String schemeType = (taxProfile != null) ? taxProfile.getSchemeType() : "TER";
-            boolean hasNPWP = (taxProfile == null) || "Y".equals(taxProfile.getHasNPWP());
-            BigDecimal npwpMultiplier = hasNPWP ? BigDecimal.ONE : new BigDecimal("1.2");
-
-            if (period.isDecemberReconciliation) {
-                // ── Rekonsiliasi tahunan — SELALU progresif, terlepas
-                //    dari schemeType assignment employee ───────────────
-                BigDecimal annualGrossIncome = getAnnualGrossIncome(employeeId, period, trxName);
-                BigDecimal alreadyWithheldYTD = getAlreadyWithheldYTD(employeeId, period, trxName);
-                String ptkpStatus = emp.ptkpStatus;
-                BigDecimal ptkpAmount = MPayrollPTKPRate.lookupAnnualAmount(
-                    ptkpStatus, period.dateFrom, trxName);
-
-                pph21 = ProgressiveTaxCalculator.calculateDecemberAmount(
-                    annualGrossIncome, ptkpAmount, alreadyWithheldYTD, progressiveBrackets);
-
-            } else if ("PASAL26".equals(schemeType)) {
-                List<TaxBracket> pasal26Brackets = MPayrollTaxRate.getActiveBracketsAsTaxBracket(
-                    "PASAL26", period.dateFrom, trxName);
-                if (pasal26Brackets.isEmpty()) {
-                    throw new IllegalStateException(
-                        "Employee " + employeeId + " berskema PASAL26 tapi tidak ada " +
-                        "X_Payroll_TaxRate aktif untuk SchemeType='PASAL26'."
-                    );
-                }
-                pph21 = grossIncome.multiply(pasal26Brackets.get(0).rate)
-                    .setScale(0, RoundingMode.HALF_UP);
-
-            } else {
-                // ── Default: TER bulanan biasa ─────────────────────────
-                String terCategory = (taxProfile != null && taxProfile.getTER_CategoryOverride() != null)
-                    ? taxProfile.getTER_CategoryOverride()
-                    : emp.terCategory;
-
-                if (terCategory == null) {
-                    throw new IllegalStateException(
-                        "Employee " + employeeId + " tidak punya X_TER_Category di HR_Employee " +
-                        "maupun override di X_Payroll_EmployeeTaxProfile. Tidak bisa hitung TER."
-                    );
-                }
-
-                terRateUsed = TERCalculator.lookupRate(terCategory, grossIncome, terBrackets);
-                terCategoryUsed = terCategory;
-                pph21 = TERCalculator.calculate(terCategory, grossIncome, terBrackets, npwpMultiplier);
+            if (components.isEmpty()) {
+                log.log(Level.WARNING, "Employee {0} tidak punya X_Payroll_ComponentInput " +
+                    "untuk periode {1} — di-skip dari run ini.",
+                    new Object[]{ employeeId, p_PayrollPeriodID });
+                continue;
             }
 
-            // ── 4b. BPJS — loop generik semua program aktif ────────────
+            BigDecimal cashGrossIncome = BigDecimal.ZERO;      // semua EARNING, apapun status pajaknya
+            BigDecimal taxableEarningIncome = BigDecimal.ZERO; // EARNING yang IsTaxable='Y'
+            BigDecimal bpjsBaseIncome = BigDecimal.ZERO;       // EARNING yang IsBPJSBase='Y'
+
+            for (ComponentInputRow c : components) {
+                if ("EARNING".equals(c.componentType)) {
+                    cashGrossIncome = cashGrossIncome.add(c.amount);
+                    if (c.isTaxable) taxableEarningIncome = taxableEarningIncome.add(c.amount);
+                    if (c.isBpjsBase) bpjsBaseIncome = bpjsBaseIncome.add(c.amount);
+                }
+                // ComponentType='DEDUCTION' — dijumlahkan terpisah kalau
+                // nanti ada kebutuhan potongan non-BPJS non-pajak (belum
+                // ada kasusnya sampai sekarang, disiapkan strukturnya saja).
+            }
+
+            // ── 5b. BPJS — loop generik semua program aktif ─────────────
             List<BpjsDetailResult> bpjsDetails = new ArrayList<>();
             BigDecimal totalBpjsEmployeeDeduction = BigDecimal.ZERO;
+            BigDecimal employerTaxableAddition = BigDecimal.ZERO; // natura BPJS yg IsEmployerContributionTaxable='Y'
 
             for (MPayrollBPJSRate rate : activeBpjsRates) {
                 boolean isEnrolled = MPayrollEmployeeProgram.isEmployeeEnrolled(
@@ -165,7 +163,7 @@ public class GeneratePayrollRun extends SvrProcess {
                 if (!isEnrolled) continue;
 
                 BigDecimal wageBase = WageCapUtil.applyCap(
-                    grossIncome, rate.getWageCapLower(), rate.getWageCapUpper());
+                    bpjsBaseIncome, rate.getWageCapLower(), rate.getWageCapUpper());
                 BigDecimal employeeAmount = wageBase.multiply(rate.getEmployeeRate())
                     .setScale(0, RoundingMode.HALF_UP);
                 BigDecimal employerAmount = wageBase.multiply(rate.getEmployerRate())
@@ -176,38 +174,123 @@ public class GeneratePayrollRun extends SvrProcess {
                     rate.getEmployeeRate(), rate.getEmployerRate(),
                     employeeAmount, employerAmount, rate.get_ID()
                 ));
+
                 totalBpjsEmployeeDeduction = totalBpjsEmployeeDeduction.add(employeeAmount);
+                if (rate.isEmployerContributionTaxable()) {
+                    employerTaxableAddition = employerTaxableAddition.add(employerAmount);
+                }
             }
 
-            // ── 4c. Totals ──────────────────────────────────────────────
+            BigDecimal taxableGrossIncome = taxableEarningIncome.add(employerTaxableAddition);
+
+            // ── 5c. PPh21 — kumulatif lintas run dalam periode yang sama ─
+            BigDecimal pph21;
+            String terCategoryUsed = null;
+            BigDecimal terRateUsed = null;
+            BigDecimal cumulativeGrossBeforeThisRun = BigDecimal.ZERO;
+            BigDecimal withheldPreviouslyThisPeriod = BigDecimal.ZERO;
+
+            MPayrollEmployeeTaxProfile taxProfile =
+                MPayrollEmployeeTaxProfile.getActiveProfile(employeeId, period.dateFrom, trxName);
+            String schemeType = (taxProfile != null) ? taxProfile.getSchemeType() : "TER";
+            boolean hasNPWP = (taxProfile == null) || "Y".equals(taxProfile.getHasNPWP());
+            BigDecimal npwpMultiplier = hasNPWP ? BigDecimal.ONE : new BigDecimal("1.2");
+
+            if (period.isDecemberReconciliation) {
+                // ── Rekonsiliasi tahunan — SELALU progresif ─────────────
+                BigDecimal annualGrossIncome = getAnnualTaxableGross(employeeId, period, trxName)
+                    .add(taxableGrossIncome); // + run Desember ini sendiri (belum ke-commit)
+                BigDecimal alreadyWithheldYTD = getAlreadyWithheldYTD(employeeId, period, trxName);
+                BigDecimal ptkpAmount = MPayrollPTKPRate.lookupAnnualAmount(
+                    emp.ptkpStatus, period.dateFrom, trxName);
+
+                pph21 = ProgressiveTaxCalculator.calculateDecemberAmount(
+                    annualGrossIncome, ptkpAmount, alreadyWithheldYTD, progressiveBrackets);
+
+                if (pph21.compareTo(BigDecimal.ZERO) < 0) {
+                    log.log(Level.WARNING, "PPh21 Desember NEGATIF (lebih bayar) untuk employee " +
+                        "{0}: {1} — TIDAK di-clamp, catat untuk kompensasi/restitusi sesuai " +
+                        "kebijakan finance, bukan dianggap 0.", new Object[]{ employeeId, pph21 });
+                }
+
+            } else if ("PASAL26".equals(schemeType)) {
+                List<TaxBracket> pasal26Brackets = MPayrollTaxRate.getActiveBracketsAsTaxBracket(
+                    "PASAL26", period.dateFrom, trxName);
+                if (pasal26Brackets.isEmpty()) {
+                    throw new IllegalStateException(
+                        "Employee " + employeeId + " berskema PASAL26 tapi tidak ada " +
+                        "X_Payroll_TaxRate aktif untuk SchemeType='PASAL26'."
+                    );
+                }
+                pph21 = taxableGrossIncome.multiply(pasal26Brackets.get(0).rate)
+                    .setScale(0, RoundingMode.HALF_UP);
+
+            } else {
+                // ── Default: TER, KUMULATIF terhadap run lain periode ini ──
+                String terCategory = (taxProfile != null && taxProfile.getTER_CategoryOverride() != null)
+                    ? taxProfile.getTER_CategoryOverride()
+                    : emp.terCategory;
+                if (terCategory == null) {
+                    throw new IllegalStateException(
+                        "Employee " + employeeId + " tidak punya X_TER_Category di HR_Employee " +
+                        "maupun override di X_Payroll_EmployeeTaxProfile."
+                    );
+                }
+
+                cumulativeGrossBeforeThisRun = getCumulativeTaxableGrossThisPeriod(
+                    employeeId, p_PayrollPeriodID, trxName);
+                withheldPreviouslyThisPeriod = getCumulativeWithheldThisPeriod(
+                    employeeId, p_PayrollPeriodID, trxName);
+
+                BigDecimal combinedGross = cumulativeGrossBeforeThisRun.add(taxableGrossIncome);
+                terRateUsed = TERCalculator.lookupRate(terCategory, combinedGross, terBrackets);
+                terCategoryUsed = terCategory;
+
+                BigDecimal pph21OnCombined = combinedGross.multiply(terRateUsed)
+                    .multiply(npwpMultiplier).setScale(0, RoundingMode.HALF_UP);
+
+                pph21 = pph21OnCombined.subtract(withheldPreviouslyThisPeriod);
+                if (pph21.compareTo(BigDecimal.ZERO) < 0) {
+                    log.log(Level.WARNING, "PPh21 kumulatif negatif untuk employee {0} run {1} " +
+                        "— di-clamp ke 0 (indikasi masalah pembulatan di batas bracket, cek data).",
+                        new Object[]{ employeeId, runId });
+                    pph21 = BigDecimal.ZERO;
+                }
+            }
+
+            // ── 5d. Totals ────────────────────────────────────────────────
             BigDecimal totalDeduction = pph21.add(totalBpjsEmployeeDeduction);
-            BigDecimal netIncome = grossIncome.subtract(totalDeduction);
+            BigDecimal netIncome = cashGrossIncome.subtract(totalDeduction); // BUKAN dari taxableGrossIncome
 
-            // ── 4d. Insert X_Payroll_RunLine ────────────────────────────
-            int runLineId = insertRunLine(runId, employeeId, grossIncome,
-                terCategoryUsed, terRateUsed, pph21, totalDeduction, netIncome,
-                adClientId, adOrgId, trxName);
+            // ── 5e. Insert RunLine + breakdown ────────────────────────────
+            int runLineId = insertRunLine(runId, employeeId,
+                cashGrossIncome, taxableGrossIncome, bpjsBaseIncome,
+                terCategoryUsed, terRateUsed, pph21,
+                cumulativeGrossBeforeThisRun, withheldPreviouslyThisPeriod,
+                totalDeduction, netIncome, adClientId, adOrgId, adUserId, trxName);
 
-            // ── 4e. Insert X_Payroll_RunLineDetail per program BPJS ─────
+            for (ComponentInputRow c : components) {
+                insertRunLineComponent(runLineId, c, adClientId, adOrgId, adUserId, trxName);
+            }
             for (BpjsDetailResult detail : bpjsDetails) {
-                insertRunLineDetail(runLineId, detail, adClientId, adOrgId, trxName);
+                insertRunLineDetail(runLineId, detail, adClientId, adOrgId, adUserId, trxName);
             }
 
             processedCount++;
         }
 
-        // ── 5. Mark run & period Complete ────────────────────────────────
+        // ── 6. Mark run Complete. PERIODE TIDAK otomatis ditutup — itu
+        //    lewat proses "Tutup Periode" terpisah, karena periode boleh
+        //    punya banyak run (REGULAR+BONUS) ────────────────────────────
         DB.executeUpdateEx(
             "UPDATE X_Payroll_Run SET DocStatus='CO' WHERE X_Payroll_Run_ID=?",
             new Object[]{ runId }, trxName);
-        DB.executeUpdateEx(
-            "UPDATE X_Payroll_Period SET DocStatus='CO' WHERE X_Payroll_Period_ID=?",
-            new Object[]{ p_PayrollPeriodID }, trxName);
 
-        // ── 6. GL Journal — belum diimplementasi, lihat catatan terpisah ──
+        // ── 7. GL Journal — belum diimplementasi, item terbuka ───────────
         // generateGLJournal(runId, trxName);
 
-        return "@OK@ - " + processedCount + " employee diproses pada Run #" + runId;
+        return "@OK@ - " + processedCount + " employee diproses pada Run #" + runId +
+            " (RunType: " + p_RunType + ")";
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -224,7 +307,7 @@ public class GeneratePayrollRun extends SvrProcess {
         String sql = "SELECT PeriodName, DocStatus, DateFrom, DateTo, IsDecemberReconciliation " +
             "FROM X_Payroll_Period WHERE X_Payroll_Period_ID=?";
         PeriodInfo info = new PeriodInfo();
-        try (java.sql.PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
+        try (PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
             pstmt.setInt(1, periodId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (!rs.next()) throw new IllegalStateException("Periode ID " + periodId + " tidak ditemukan.");
@@ -241,17 +324,24 @@ public class GeneratePayrollRun extends SvrProcess {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // Helper — Employee
+    // Helper — Employee & Komponen
     // ═══════════════════════════════════════════════════════════════════
 
     private static class EmployeeSnapshot {
         String terCategory, ptkpStatus, npwp;
     }
 
+    private static class ComponentInputRow {
+        int componentId;
+        String componentType; // EARNING/DEDUCTION
+        boolean isTaxable, isBpjsBase;
+        BigDecimal amount;
+    }
+
     private List<Integer> getActiveEmployeeIds(String trxName) {
         List<Integer> ids = new ArrayList<>();
         String sql = "SELECT HR_Employee_ID FROM HR_Employee WHERE IsActive='Y'";
-        try (java.sql.PreparedStatement pstmt = DB.prepareStatement(sql, trxName);
+        try (PreparedStatement pstmt = DB.prepareStatement(sql, trxName);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) ids.add(rs.getInt(1));
         } catch (Exception e) {
@@ -263,7 +353,7 @@ public class GeneratePayrollRun extends SvrProcess {
     private EmployeeSnapshot loadEmployeeSnapshot(int employeeId, String trxName) {
         String sql = "SELECT X_TER_Category, X_PTKPStatus, X_NPWP FROM HR_Employee WHERE HR_Employee_ID=?";
         EmployeeSnapshot snap = new EmployeeSnapshot();
-        try (java.sql.PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
+        try (PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
             pstmt.setInt(1, employeeId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -279,46 +369,70 @@ public class GeneratePayrollRun extends SvrProcess {
     }
 
     /**
-     * ⚠️ TITIK YANG PERLU DIGANTI kalau struktur gaji jadi komponen
-     * (Gaji Pokok + Tunjangan + Lembur, dst) alih-alih flat.
-     *
-     * Versi flat sekarang: baca kolom custom X_MonthlyGrossIncome di
-     * HR_Employee (perlu ditambahkan lewat GUI Table and Column kalau
-     * belum ada) — atau ganti sumbernya ke HR_Contract kalau gaji pokok
-     * disimpan di sana.
-     *
-     * Versi komponen (kalau nanti dipilih): method ini akan JOIN ke
-     * X_Payroll_RunLineDetail earning + X_Payroll_Component (IsTaxable
-     * flag menentukan komponen mana yang masuk basis PPh21 vs tidak —
-     * catatan: itu berarti GrossIncome untuk PPh21 bisa BEDA dari
-     * GrossIncome untuk basis BPJS, kompleksitas tambahan yang perlu
-     * dipikirkan ulang strukturnya kalau memang ke arah situ).
+     * Baca X_Payroll_ComponentInput employee untuk periode ini, JOIN ke
+     * X_Payroll_Component untuk ambil flag IsTaxable/IsBPJSBase/Type.
      */
-    private BigDecimal calculateGrossIncome(int employeeId, PeriodInfo period, String trxName) {
-        BigDecimal gross = DB.getSQLValueBDEx(trxName,
-            "SELECT X_MonthlyGrossIncome FROM HR_Employee WHERE HR_Employee_ID=?", employeeId);
-        if (gross == null) {
-            throw new IllegalStateException(
-                "Employee " + employeeId + " tidak punya X_MonthlyGrossIncome di HR_Employee."
-            );
+    private List<ComponentInputRow> loadComponentInputs(int employeeId, int periodId, String trxName) {
+        List<ComponentInputRow> rows = new ArrayList<>();
+        String sql =
+            "SELECT ci.X_Payroll_Component_ID, ci.Amount, " +
+            "       c.ComponentType, c.IsTaxable, c.IsBPJSBase " +
+            "FROM X_Payroll_ComponentInput ci " +
+            "JOIN X_Payroll_Component c ON c.X_Payroll_Component_ID = ci.X_Payroll_Component_ID " +
+            "WHERE ci.HR_Employee_ID=? AND ci.X_Payroll_Period_ID=? AND ci.IsActive='Y'";
+        try (PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
+            pstmt.setInt(1, employeeId);
+            pstmt.setInt(2, periodId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    ComponentInputRow row = new ComponentInputRow();
+                    row.componentId = rs.getInt("X_Payroll_Component_ID");
+                    row.amount = rs.getBigDecimal("Amount");
+                    row.componentType = rs.getString("ComponentType");
+                    row.isTaxable = "Y".equals(rs.getString("IsTaxable"));
+                    row.isBpjsBase = "Y".equals(rs.getString("IsBPJSBase"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Gagal load ComponentInput employee " + employeeId + ": " + e.getMessage(), e);
         }
-        return gross;
+        return rows;
     }
 
-    private BigDecimal getAnnualGrossIncome(int employeeId, PeriodInfo period, String trxName) {
-        // Jumlah GrossIncome dari SEMUA X_Payroll_RunLine tahun berjalan
-        // (Jan-Nov yang sudah diproses) DITAMBAH gross bulan Desember
-        // berjalan (period ini sendiri, belum ada RunLine-nya).
-        BigDecimal ytdFromPreviousRuns = DB.getSQLValueBDEx(trxName,
-            "SELECT COALESCE(SUM(rl.GrossIncome), 0) FROM X_Payroll_RunLine rl " +
+    // ═══════════════════════════════════════════════════════════════════
+    // Helper — Query kumulatif (multi-run per periode, & rekonsiliasi tahunan)
+    // Semua query di sini filter DocStatus='CO' — run yang di-void ('VO')
+    // OTOMATIS terkecuali tanpa logic tambahan.
+    // ═══════════════════════════════════════════════════════════════════
+
+    private BigDecimal getCumulativeTaxableGrossThisPeriod(int employeeId, int periodId, String trxName) {
+        BigDecimal result = DB.getSQLValueBDEx(trxName,
+            "SELECT COALESCE(SUM(rl.TaxableGrossIncome), 0) FROM X_Payroll_RunLine rl " +
+            "JOIN X_Payroll_Run r ON r.X_Payroll_Run_ID = rl.X_Payroll_Run_ID " +
+            "WHERE rl.HR_Employee_ID=? AND r.X_Payroll_Period_ID=? AND r.DocStatus='CO'",
+            employeeId, periodId);
+        return result != null ? result : BigDecimal.ZERO;
+    }
+
+    private BigDecimal getCumulativeWithheldThisPeriod(int employeeId, int periodId, String trxName) {
+        BigDecimal result = DB.getSQLValueBDEx(trxName,
+            "SELECT COALESCE(SUM(rl.PPh21_Amount), 0) FROM X_Payroll_RunLine rl " +
+            "JOIN X_Payroll_Run r ON r.X_Payroll_Run_ID = rl.X_Payroll_Run_ID " +
+            "WHERE rl.HR_Employee_ID=? AND r.X_Payroll_Period_ID=? AND r.DocStatus='CO'",
+            employeeId, periodId);
+        return result != null ? result : BigDecimal.ZERO;
+    }
+
+    private BigDecimal getAnnualTaxableGross(int employeeId, PeriodInfo period, String trxName) {
+        BigDecimal result = DB.getSQLValueBDEx(trxName,
+            "SELECT COALESCE(SUM(rl.TaxableGrossIncome), 0) FROM X_Payroll_RunLine rl " +
             "JOIN X_Payroll_Run r ON r.X_Payroll_Run_ID = rl.X_Payroll_Run_ID " +
             "JOIN X_Payroll_Period p ON p.X_Payroll_Period_ID = r.X_Payroll_Period_ID " +
             "WHERE rl.HR_Employee_ID=? AND EXTRACT(YEAR FROM p.DateFrom) = EXTRACT(YEAR FROM ?::date) " +
             "AND r.DocStatus='CO'",
             employeeId, period.dateFrom);
-
-        BigDecimal decemberGross = calculateGrossIncome(employeeId, period, trxName);
-        return (ytdFromPreviousRuns != null ? ytdFromPreviousRuns : BigDecimal.ZERO).add(decemberGross);
+        return result != null ? result : BigDecimal.ZERO;
     }
 
     private BigDecimal getAlreadyWithheldYTD(int employeeId, PeriodInfo period, String trxName) {
@@ -354,19 +468,68 @@ public class GeneratePayrollRun extends SvrProcess {
         }
     }
 
-    private int insertRunLine(int runId, int employeeId, BigDecimal grossIncome,
-                               String terCategory, BigDecimal terRateApplied,
-                               BigDecimal pph21, BigDecimal totalDeduction, BigDecimal netIncome,
-                               int adClientId, int adOrgId, String trxName) {
+    private int insertRunLine(int runId, int employeeId,
+                               BigDecimal cashGrossIncome, BigDecimal taxableGrossIncome, BigDecimal bpjsBaseIncome,
+                               String terCategory, BigDecimal terRateApplied, BigDecimal pph21,
+                               BigDecimal cumulativeGrossBeforeThisRun, BigDecimal withheldPreviouslyThisPeriod,
+                               BigDecimal totalDeduction, BigDecimal netIncome,
+                               int adClientId, int adOrgId, int adUserId, String trxName) {
         int runLineId = DB.getSQLValueEx(trxName, "SELECT nextval('X_Payroll_RunLine_seq')");
         DB.executeUpdateEx(
             "INSERT INTO X_Payroll_RunLine " +
             "(X_Payroll_RunLine_ID, AD_Client_ID, AD_Org_ID, IsActive, " +
             " Created, CreatedBy, Updated, UpdatedBy, " +
-            " X_Payroll_Run_ID, HR_Employee_ID, GrossIncome, " +
-            " TER_Category, TER_RateApplied, PPh21_Amount, TotalDeduction, NetIncome) " +
+            " X_Payroll_Run_ID, HR_Employee_ID, " +
+            " CashGrossIncome, TaxableGrossIncome, BPJSBaseIncome, " +
+            " TER_Category, TER_RateApplied, PPh21_Amount, " +
+            " CumulativeGrossBeforeThisRun, PPh21WithheldPreviouslyThisPeriod, " +
+            " TotalDeduction, NetIncome) " +
+            "VALUES (?, ?, ?, 'Y', now(), ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            new Object[]{
+                runLineId, adClientId, adOrgId, adUserId, adUserId,
+                runId, employeeId,
+                cashGrossIncome, taxableGrossIncome, bpjsBaseIncome,
+                terCategory, terRateApplied, pph21,
+                cumulativeGrossBeforeThisRun, withheldPreviouslyThisPeriod,
+                totalDeduction, netIncome
+            },
+            trxName
+        );
+        return runLineId;
+    }
+
+    private void insertRunLineComponent(int runLineId, ComponentInputRow c,
+                                         int adClientId, int adOrgId, int adUserId, String trxName) {
+        int id = DB.getSQLValueEx(trxName, "SELECT nextval('X_Payroll_RunLineComponent_seq')");
+        DB.executeUpdateEx(
+            "INSERT INTO X_Payroll_RunLineComponent " +
+            "(X_Payroll_RunLineComponent_ID, AD_Client_ID, AD_Org_ID, IsActive, " +
+            " Created, CreatedBy, Updated, UpdatedBy, " +
+            " X_Payroll_RunLine_ID, X_Payroll_Component_ID, Amount) " +
+            "VALUES (?, ?, ?, 'Y', now(), ?, now(), ?, ?, ?, ?)",
+            new Object[]{ id, adClientId, adOrgId, adUserId, adUserId, runLineId, c.componentId, c.amount },
+            trxName
+        );
+    }
+
+    private void insertRunLineDetail(int runLineId, BpjsDetailResult detail,
+                                      int adClientId, int adOrgId, int adUserId, String trxName) {
+        int detailId = DB.getSQLValueEx(trxName, "SELECT nextval('X_Payroll_RunLineDetail_seq')");
+        DB.executeUpdateEx(
+            "INSERT INTO X_Payroll_RunLineDetail " +
+            "(X_Payroll_RunLineDetail_ID, AD_Client_ID, AD_Org_ID, IsActive, " +
+            " Created, CreatedBy, Updated, UpdatedBy, " +
+            " X_Payroll_RunLine_ID, ProgramType, WageBase, " +
+            " EmployeeRateApplied, EmployerRateApplied, EmployeeAmount, EmployerAmount, " +
+            " X_Payroll_BPJS_Rate_ID) " +
             "VALUES (?, ?, ?, 'Y', now(), ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             new Object[]{
-                runLineId, adClientId, adOrgId, getAD_User_ID(), getAD_User_ID(),
-                runId, employeeId, grossIncome,
-                terCategory, terRateApplied,
+                detailId, adClientId, adOrgId, adUserId, adUserId,
+                runLineId, detail.programType, detail.wageBase,
+                detail.employeeRate, detail.employerRate,
+                detail.employeeAmount, detail.employerAmount, detail.rateId
+            },
+            trxName
+        );
+    }
+}
