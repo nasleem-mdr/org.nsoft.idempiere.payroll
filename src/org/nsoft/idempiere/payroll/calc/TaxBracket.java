@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 /**
  * DTO generik untuk satu baris bracket tarif — dipakai TER, Progresif,
- * maupun Pasal 26. Diisi oleh caller (biasanya process/ layer) dari hasil
- * query X_Payroll_TaxRate, supaya calc/ package ini TIDAK tahu apa-apa
- * soal iDempiere PO/DB — murni angka masuk, angka keluar.
+ * maupun Pasal 26. Diisi oleh caller (process/ layer) dari hasil query
+ * X_Payroll_TaxRate, supaya package calc/ ini TIDAK tahu apa-apa soal
+ * iDempiere PO/DB — murni angka masuk, angka keluar, mudah di-unit-test.
  */
 public class TaxBracket {
     public final String category;      // 'A'/'B'/'C' untuk TER, null untuk skema lain
