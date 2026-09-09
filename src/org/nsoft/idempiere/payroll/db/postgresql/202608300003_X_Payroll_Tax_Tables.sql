@@ -1,4 +1,4 @@
--- ═══════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════
 -- BAGIAN 1 — REFERENSI TARIF (tidak bergantung tabel lain)
 -- Semua rate/bracket di sini WAJIB bertanggal-valid (ValidFrom/ValidTo)
 -- karena PMK dan rate BPJS berubah dari waktu ke waktu — update rate =
