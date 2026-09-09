@@ -5,31 +5,21 @@ import java.math.RoundingMode;
 import java.util.List;
 
 /**
- * Kalkulasi PPh21 tarif progresif Pasal 17 UU HPP — dipakai untuk
- * REKONSILIASI TAHUNAN masa Desember. Ini WAJIB dilakukan di masa Desember
- * menurut PMK 168/2023: TER hanya alat estimasi pemotongan bulanan,
- * kewajiban pajak sebenarnya tetap dihitung progresif atas setahun penuh.
+ * Kalkulasi PPh21 tarif progresif Pasal 17 UU HPP — WAJIB dipakai untuk
+ * rekonsiliasi tahunan masa Desember (PMK 168/2023): TER hanya estimasi
+ * pemotongan bulanan, kewajiban pajak sebenarnya dihitung progresif atas
+ * setahun penuh.
  *
- * Alur: PKP (Penghasilan Kena Pajak) tahunan = Penghasilan Bruto Tahunan
- * - PTKP → hitung PPh21 terutang setahun pakai bracket progresif → hasil
- * Desember = PPh21 terutang setahun - PPh21 yang SUDAH dipotong Jan-Nov
- * (via TER). Bisa NEGATIF (lebih bayar) — caller harus tangani kasus itu
- * sesuai kebijakan perusahaan (restitusi/kompensasi masa berikut).
+ * Hasil Desember = PPh21 terutang setahun − PPh21 yang SUDAH dipotong
+ * Jan–Nov (+ run lain dalam bulan Desember itu sendiri kalau ada). Bisa
+ * NEGATIF (lebih bayar) — caller wajib menangani sesuai kebijakan
+ * perusahaan (restitusi/kompensasi masa berikutnya).
  *
- * PTKP amount TIDAK dihitung di sini — diterima sebagai parameter, karena
- * penentuan PTKP butuh tabel referensi terpisah (status kawin/tanggungan
- * → nominal) yang belum kita desain. Lihat catatan di akhir jawaban ini.
+ * PTKP amount diterima sebagai parameter (lookup dari X_Payroll_PTKP_Rate
+ * dilakukan di process/ layer, bukan di sini).
  */
 public class ProgressiveTaxCalculator {
 
-    /**
-     * @param annualGrossIncome     total penghasilan bruto Jan-Des (setahun penuh)
-     * @param ptkpAmount            Penghasilan Tidak Kena Pajak tahunan employee ini
-     * @param alreadyWithheldYTD    total PPh21 yang sudah dipotong Jan-Nov (via TER)
-     * @param brackets              bracket progresif Pasal 17 (SchemeType='PROGRESSIVE')
-     * @return                      PPh21 yang harus dipotong di masa Desember
-     *                              (bisa negatif = lebih bayar, caller wajib handle)
-     */
     public static BigDecimal calculateDecemberAmount(BigDecimal annualGrossIncome,
                                                        BigDecimal ptkpAmount,
                                                        BigDecimal alreadyWithheldYTD,
@@ -39,23 +29,20 @@ public class ProgressiveTaxCalculator {
     }
 
     /**
-     * Hitung PPh21 terutang setahun penuh dari PKP, pakai bracket progresif
-     * berlapis (setiap lapisan kena rate-nya sendiri, BUKAN flat rate dari
-     * bracket tertinggi yang dicapai — ini beda mendasar dari cara TER
-     * lookup bekerja).
+     * Bracket berlapis — setiap lapisan kena rate-nya sendiri (BUKAN
+     * flat rate dari bracket tertinggi yang dicapai).
      */
     public static BigDecimal calculateAnnualLiability(BigDecimal annualGrossIncome,
                                                         BigDecimal ptkpAmount,
                                                         List<TaxBracket> brackets) {
         BigDecimal pkp = annualGrossIncome.subtract(ptkpAmount);
         if (pkp.compareTo(BigDecimal.ZERO) <= 0) {
-            return BigDecimal.ZERO; // penghasilan di bawah PTKP, tidak kena pajak
+            return BigDecimal.ZERO;
         }
 
         BigDecimal totalTax = BigDecimal.ZERO;
-
         for (TaxBracket b : brackets) {
-            if (pkp.compareTo(b.incomeFrom) <= 0) continue; // PKP belum masuk lapisan ini
+            if (pkp.compareTo(b.incomeFrom) <= 0) continue;
 
             BigDecimal layerCeiling = (b.incomeTo != null) ? b.incomeTo : pkp;
             BigDecimal layerTop = pkp.min(layerCeiling);
@@ -65,7 +52,6 @@ public class ProgressiveTaxCalculator {
                 totalTax = totalTax.add(layerAmount.multiply(b.rate));
             }
         }
-
         return totalTax.setScale(0, RoundingMode.HALF_UP);
     }
 }
