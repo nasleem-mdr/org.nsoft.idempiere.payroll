@@ -4,9 +4,8 @@ Bundle-Name: NSOFT Payroll Module
 Bundle-SymbolicName: org.nsoft.idempiere.payroll;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.nsoft.idempiere.payroll.Activator
-Require-Bundle: org.adempiere.base;bundle-version="2.0.0",
- org.compiere.model;bundle-version="2.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.adempiere.base;bundle-version="13.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.nsoft.idempiere.payroll.model,
  org.nsoft.idempiere.payroll.process,
  org.nsoft.idempiere.payroll.calc
