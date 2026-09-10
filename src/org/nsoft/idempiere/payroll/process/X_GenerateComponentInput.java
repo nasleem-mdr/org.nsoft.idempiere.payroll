@@ -64,8 +64,8 @@ public class X_GenerateComponentInput extends SvrProcess {
             "FROM HR_Contract c " +
             "JOIN HR_Employee e ON e.C_BPartner_ID = c.C_BPartner_ID " +
             "WHERE c.IsActive='Y' AND e.IsActive='Y' " +
-            "AND c.ValidFrom <= ? " +
-            "AND (c.ValidTo IS NULL OR c.ValidTo >= ?) " +
+            "AND e.StartDate <= ? AND (e.EndDate IS NULL OR e.EndDate >= ?) " +
+            "AND c.ValidFrom <= ? AND (c.ValidTo IS NULL OR c.ValidTo >= ?) " +
             "ORDER BY e.HR_Employee_ID, c.ValidFrom DESC";
 
         // ── Kelompokkan hasil per employee, deteksi duplikat kontrak ───
