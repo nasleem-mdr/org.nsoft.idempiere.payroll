@@ -65,15 +65,18 @@ public class X_GenerateComponentInput extends SvrProcess {
             "JOIN HR_Employee e ON e.C_BPartner_ID = c.C_BPartner_ID " +
             "WHERE c.IsActive='Y' AND e.IsActive='Y' " +
             "AND e.StartDate <= ? AND (e.EndDate IS NULL OR e.EndDate >= ?) " +
-            "AND c.ValidFrom <= ? AND (c.ValidTo IS NULL OR c.ValidTo >= ?) " +
+            "AND c.ValidFrom <= ? " +
+            "AND (c.ValidTo IS NULL OR c.ValidTo >= ?) " +
             "ORDER BY e.HR_Employee_ID, c.ValidFrom DESC";
 
         // ── Kelompokkan hasil per employee, deteksi duplikat kontrak ───
         java.util.Map<Integer, java.util.List<Integer>> contractsByEmployee = new java.util.LinkedHashMap<>();
 
-        try (PreparedStatement pstmt = DB.prepareStatement(contractSql, trxName)) {
-            pstmt.setTimestamp(1, periodDateTo);
-            pstmt.setTimestamp(2, periodDateFrom);
+       try (PreparedStatement pstmt = DB.prepareStatement(contractSql, trxName)) {
+            pstmt.setTimestamp(1, periodDateTo);      // e.StartDate <= periodDateTo
+            pstmt.setTimestamp(2, periodDateFrom);    // e.EndDate >= periodDateFrom
+            pstmt.setTimestamp(3, periodDateTo);      // c.ValidFrom <= periodDateTo
+            pstmt.setTimestamp(4, periodDateFrom);    // c.ValidTo >= periodDateFrom
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     int employeeId = rs.getInt("HR_Employee_ID");
