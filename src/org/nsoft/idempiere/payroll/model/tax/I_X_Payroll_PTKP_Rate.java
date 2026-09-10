@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for X_Payroll_Bpjs_Rate
+/** Generated Interface for X_Payroll_PTKP_Rate
  *  @author iDempiere (generated) 
  *  @version Release 13
  */
 @SuppressWarnings("all")
-public interface I_X_Payroll_Bpjs_Rate 
+public interface I_X_Payroll_PTKP_Rate 
 {
 
-    /** TableName=X_Payroll_Bpjs_Rate */
-    public static final String Table_Name = "X_Payroll_Bpjs_Rate";
+    /** TableName=X_Payroll_PTKP_Rate */
+    public static final String Table_Name = "X_Payroll_PTKP_Rate";
 
-    /** AD_Table_ID=1000012 */
+    /** AD_Table_ID=1000018 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,6 +64,15 @@ public interface I_X_Payroll_Bpjs_Rate
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name AnnualAmount */
+    public static final String COLUMNNAME_AnnualAmount = "AnnualAmount";
+
+	/** Set AnnualAmount	  */
+	public void setAnnualAmount (BigDecimal AnnualAmount);
+
+	/** Get AnnualAmount	  */
+	public BigDecimal getAnnualAmount();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -92,6 +101,15 @@ public interface I_X_Payroll_Bpjs_Rate
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name PTKPStatus */
+    public static final String COLUMNNAME_PTKPStatus = "PTKPStatus";
+
+	/** Set PTKPStatus	  */
+	public void setPTKPStatus (String PTKPStatus);
+
+	/** Get PTKPStatus	  */
+	public String getPTKPStatus();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -135,66 +153,12 @@ public interface I_X_Payroll_Bpjs_Rate
 	  */
 	public Timestamp getValidTo();
 
-    /** Column name X_Payroll_Bpjs_Rate_ID */
-    public static final String COLUMNNAME_X_Payroll_Bpjs_Rate_ID = "X_Payroll_Bpjs_Rate_ID";
+    /** Column name X_Payroll_PTKP_Rate_ID */
+    public static final String COLUMNNAME_X_Payroll_PTKP_Rate_ID = "X_Payroll_PTKP_Rate_ID";
 
-	/** Set BPJS Rate	  */
-	public void setX_Payroll_Bpjs_Rate_ID (int X_Payroll_Bpjs_Rate_ID);
+	/** Set Payroll PTKP Rate	  */
+	public void setX_Payroll_PTKP_Rate_ID (int X_Payroll_PTKP_Rate_ID);
 
-	/** Get BPJS Rate	  */
-	public int getX_Payroll_Bpjs_Rate_ID();
-
-    /** Column name employeerate */
-    public static final String COLUMNNAME_employeerate = "employeerate";
-
-	/** Set employeerate	  */
-	public void setemployeerate (BigDecimal employeerate);
-
-	/** Get employeerate	  */
-	public BigDecimal getemployeerate();
-
-    /** Column name employerrate */
-    public static final String COLUMNNAME_employerrate = "employerrate";
-
-	/** Set employerrate	  */
-	public void setemployerrate (BigDecimal employerrate);
-
-	/** Get employerrate	  */
-	public BigDecimal getemployerrate();
-
-    /** Column name isemployercontributiontaxable */
-    public static final String COLUMNNAME_isemployercontributiontaxable = "isemployercontributiontaxable";
-
-	/** Set isemployercontributiontaxable	  */
-	public void setisemployercontributiontaxable (boolean isemployercontributiontaxable);
-
-	/** Get isemployercontributiontaxable	  */
-	public boolean isemployercontributiontaxable();
-
-    /** Column name programtype */
-    public static final String COLUMNNAME_programtype = "programtype";
-
-	/** Set programtype	  */
-	public void setprogramtype (BigDecimal programtype);
-
-	/** Get programtype	  */
-	public BigDecimal getprogramtype();
-
-    /** Column name wagecaplower */
-    public static final String COLUMNNAME_wagecaplower = "wagecaplower";
-
-	/** Set wagecaplower	  */
-	public void setwagecaplower (BigDecimal wagecaplower);
-
-	/** Get wagecaplower	  */
-	public BigDecimal getwagecaplower();
-
-    /** Column name wagecapupper */
-    public static final String COLUMNNAME_wagecapupper = "wagecapupper";
-
-	/** Set wagecapupper	  */
-	public void setwagecapupper (BigDecimal wagecapupper);
-
-	/** Get wagecapupper	  */
-	public BigDecimal getwagecapupper();
+	/** Get Payroll PTKP Rate	  */
+	public int getX_Payroll_PTKP_Rate_ID();
 }

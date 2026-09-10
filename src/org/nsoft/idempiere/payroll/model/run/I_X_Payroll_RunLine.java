@@ -64,6 +64,24 @@ public interface I_X_Payroll_RunLine
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name BPJSBaseIncome */
+    public static final String COLUMNNAME_BPJSBaseIncome = "BPJSBaseIncome";
+
+	/** Set BPJSBaseIncome	  */
+	public void setBPJSBaseIncome (BigDecimal BPJSBaseIncome);
+
+	/** Get BPJSBaseIncome	  */
+	public BigDecimal getBPJSBaseIncome();
+
+    /** Column name CashGrossIncome */
+    public static final String COLUMNNAME_CashGrossIncome = "CashGrossIncome";
+
+	/** Set CashGrossIncome	  */
+	public void setCashGrossIncome (BigDecimal CashGrossIncome);
+
+	/** Get CashGrossIncome	  */
+	public BigDecimal getCashGrossIncome();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -79,6 +97,15 @@ public interface I_X_Payroll_RunLine
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name CumulativeGrossBeforeThisRun */
+    public static final String COLUMNNAME_CumulativeGrossBeforeThisRun = "CumulativeGrossBeforeThisRun";
+
+	/** Set CumulativeGrossBeforeThisRun	  */
+	public void setCumulativeGrossBeforeThisRun (BigDecimal CumulativeGrossBeforeThisRun);
+
+	/** Get CumulativeGrossBeforeThisRun	  */
+	public BigDecimal getCumulativeGrossBeforeThisRun();
 
     /** Column name HR_Employee_ID */
     public static final String COLUMNNAME_HR_Employee_ID = "HR_Employee_ID";
@@ -104,6 +131,69 @@ public interface I_X_Payroll_RunLine
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name NetIncome */
+    public static final String COLUMNNAME_NetIncome = "NetIncome";
+
+	/** Set NetIncome	  */
+	public void setNetIncome (BigDecimal NetIncome);
+
+	/** Get NetIncome	  */
+	public BigDecimal getNetIncome();
+
+    /** Column name PPh21WithheldPreviouslyThisPeriod */
+    public static final String COLUMNNAME_PPh21WithheldPreviouslyThisPeriod = "PPh21WithheldPreviouslyThisPeriod";
+
+	/** Set PPh21WithheldPreviouslyThisPeriod	  */
+	public void setPPh21WithheldPreviouslyThisPeriod (BigDecimal PPh21WithheldPreviouslyThisPeriod);
+
+	/** Get PPh21WithheldPreviouslyThisPeriod	  */
+	public BigDecimal getPPh21WithheldPreviouslyThisPeriod();
+
+    /** Column name PPh21_Amount */
+    public static final String COLUMNNAME_PPh21_Amount = "PPh21_Amount";
+
+	/** Set PPh21_Amount	  */
+	public void setPPh21_Amount (BigDecimal PPh21_Amount);
+
+	/** Get PPh21_Amount	  */
+	public BigDecimal getPPh21_Amount();
+
+    /** Column name TER_Category */
+    public static final String COLUMNNAME_TER_Category = "TER_Category";
+
+	/** Set TER_Category	  */
+	public void setTER_Category (String TER_Category);
+
+	/** Get TER_Category	  */
+	public String getTER_Category();
+
+    /** Column name TER_RateApplied */
+    public static final String COLUMNNAME_TER_RateApplied = "TER_RateApplied";
+
+	/** Set TER_RateApplied	  */
+	public void setTER_RateApplied (BigDecimal TER_RateApplied);
+
+	/** Get TER_RateApplied	  */
+	public BigDecimal getTER_RateApplied();
+
+    /** Column name TaxableGrossIncome */
+    public static final String COLUMNNAME_TaxableGrossIncome = "TaxableGrossIncome";
+
+	/** Set TaxableGrossIncome	  */
+	public void setTaxableGrossIncome (BigDecimal TaxableGrossIncome);
+
+	/** Get TaxableGrossIncome	  */
+	public BigDecimal getTaxableGrossIncome();
+
+    /** Column name TotalDeduction */
+    public static final String COLUMNNAME_TotalDeduction = "TotalDeduction";
+
+	/** Set TotalDeduction	  */
+	public void setTotalDeduction (BigDecimal TotalDeduction);
+
+	/** Get TotalDeduction	  */
+	public BigDecimal getTotalDeduction();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -141,94 +231,4 @@ public interface I_X_Payroll_RunLine
 
 	@Deprecated(since="13") // use better methods with cache
 	public I_X_Payroll_Run getX_Payroll_Run() throws RuntimeException;
-
-    /** Column name bpjsbaseincome */
-    public static final String COLUMNNAME_bpjsbaseincome = "bpjsbaseincome";
-
-	/** Set bpjsbaseincome	  */
-	public void setbpjsbaseincome (BigDecimal bpjsbaseincome);
-
-	/** Get bpjsbaseincome	  */
-	public BigDecimal getbpjsbaseincome();
-
-    /** Column name cashgrossincome */
-    public static final String COLUMNNAME_cashgrossincome = "cashgrossincome";
-
-	/** Set cashgrossincome	  */
-	public void setcashgrossincome (BigDecimal cashgrossincome);
-
-	/** Get cashgrossincome	  */
-	public BigDecimal getcashgrossincome();
-
-    /** Column name cumulativegrossbeforethisrun */
-    public static final String COLUMNNAME_cumulativegrossbeforethisrun = "cumulativegrossbeforethisrun";
-
-	/** Set cumulativegrossbeforethisrun	  */
-	public void setcumulativegrossbeforethisrun (BigDecimal cumulativegrossbeforethisrun);
-
-	/** Get cumulativegrossbeforethisrun	  */
-	public BigDecimal getcumulativegrossbeforethisrun();
-
-    /** Column name netincome */
-    public static final String COLUMNNAME_netincome = "netincome";
-
-	/** Set netincome	  */
-	public void setnetincome (BigDecimal netincome);
-
-	/** Get netincome	  */
-	public BigDecimal getnetincome();
-
-    /** Column name pph21_amount */
-    public static final String COLUMNNAME_pph21_amount = "pph21_amount";
-
-	/** Set pph21_amount	  */
-	public void setpph21_amount (BigDecimal pph21_amount);
-
-	/** Get pph21_amount	  */
-	public BigDecimal getpph21_amount();
-
-    /** Column name pph21withheldpreviouslythisperiod */
-    public static final String COLUMNNAME_pph21withheldpreviouslythisperiod = "pph21withheldpreviouslythisperiod";
-
-	/** Set pph21withheldpreviouslythisperiod	  */
-	public void setpph21withheldpreviouslythisperiod (BigDecimal pph21withheldpreviouslythisperiod);
-
-	/** Get pph21withheldpreviouslythisperiod	  */
-	public BigDecimal getpph21withheldpreviouslythisperiod();
-
-    /** Column name taxablegrossincome */
-    public static final String COLUMNNAME_taxablegrossincome = "taxablegrossincome";
-
-	/** Set taxablegrossincome	  */
-	public void settaxablegrossincome (BigDecimal taxablegrossincome);
-
-	/** Get taxablegrossincome	  */
-	public BigDecimal gettaxablegrossincome();
-
-    /** Column name ter_category */
-    public static final String COLUMNNAME_ter_category = "ter_category";
-
-	/** Set ter_category	  */
-	public void setter_category (boolean ter_category);
-
-	/** Get ter_category	  */
-	public boolean ister_category();
-
-    /** Column name ter_rateapplied */
-    public static final String COLUMNNAME_ter_rateapplied = "ter_rateapplied";
-
-	/** Set ter_rateapplied	  */
-	public void setter_rateapplied (BigDecimal ter_rateapplied);
-
-	/** Get ter_rateapplied	  */
-	public BigDecimal getter_rateapplied();
-
-    /** Column name totaldeduction */
-    public static final String COLUMNNAME_totaldeduction = "totaldeduction";
-
-	/** Set totaldeduction	  */
-	public void settotaldeduction (BigDecimal totaldeduction);
-
-	/** Get totaldeduction	  */
-	public BigDecimal gettotaldeduction();
 }

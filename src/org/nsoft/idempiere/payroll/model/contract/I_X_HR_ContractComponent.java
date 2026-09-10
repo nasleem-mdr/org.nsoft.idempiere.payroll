@@ -14,25 +14,25 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.nsoft.idempiere.payroll.model.bpjs;
+package org.nsoft.idempiere.payroll.model.contract;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for X_Payroll_Bpjs_Rate
+/** Generated Interface for X_HR_ContractComponent
  *  @author iDempiere (generated) 
  *  @version Release 13
  */
 @SuppressWarnings("all")
-public interface I_X_Payroll_Bpjs_Rate 
+public interface I_X_HR_ContractComponent 
 {
 
-    /** TableName=X_Payroll_Bpjs_Rate */
-    public static final String Table_Name = "X_Payroll_Bpjs_Rate";
+    /** TableName=X_HR_ContractComponent */
+    public static final String Table_Name = "X_HR_ContractComponent";
 
-    /** AD_Table_ID=1000012 */
+    /** AD_Table_ID=1000024 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,6 +64,19 @@ public interface I_X_Payroll_Bpjs_Rate
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Amount */
+    public static final String COLUMNNAME_Amount = "Amount";
+
+	/** Set Amount.
+	  * Amount in a defined currency
+	  */
+	public void setAmount (BigDecimal Amount);
+
+	/** Get Amount.
+	  * Amount in a defined currency
+	  */
+	public BigDecimal getAmount();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -79,6 +92,18 @@ public interface I_X_Payroll_Bpjs_Rate
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name HR_Contract_ID */
+    public static final String COLUMNNAME_HR_Contract_ID = "HR_Contract_ID";
+
+	/** Set Payroll Contract	  */
+	public void setHR_Contract_ID (int HR_Contract_ID);
+
+	/** Get Payroll Contract	  */
+	public int getHR_Contract_ID();
+
+	@Deprecated(since="13") // use better methods with cache
+	public org.eevolution.model.I_HR_Contract getHR_Contract() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -109,92 +134,24 @@ public interface I_X_Payroll_Bpjs_Rate
 	  */
 	public int getUpdatedBy();
 
-    /** Column name ValidFrom */
-    public static final String COLUMNNAME_ValidFrom = "ValidFrom";
+    /** Column name X_HR_ContractComponent_ID */
+    public static final String COLUMNNAME_X_HR_ContractComponent_ID = "X_HR_ContractComponent_ID";
 
-	/** Set Valid from.
-	  * Valid from including this date (first day)
-	  */
-	public void setValidFrom (Timestamp ValidFrom);
+	/** Set HR Contract Component	  */
+	public void setX_HR_ContractComponent_ID (int X_HR_ContractComponent_ID);
 
-	/** Get Valid from.
-	  * Valid from including this date (first day)
-	  */
-	public Timestamp getValidFrom();
+	/** Get HR Contract Component	  */
+	public int getX_HR_ContractComponent_ID();
 
-    /** Column name ValidTo */
-    public static final String COLUMNNAME_ValidTo = "ValidTo";
+    /** Column name X_Payroll_Component_ID */
+    public static final String COLUMNNAME_X_Payroll_Component_ID = "X_Payroll_Component_ID";
 
-	/** Set Valid to.
-	  * Valid to including this date (last day)
-	  */
-	public void setValidTo (Timestamp ValidTo);
+	/** Set Payroll Component	  */
+	public void setX_Payroll_Component_ID (int X_Payroll_Component_ID);
 
-	/** Get Valid to.
-	  * Valid to including this date (last day)
-	  */
-	public Timestamp getValidTo();
+	/** Get Payroll Component	  */
+	public int getX_Payroll_Component_ID();
 
-    /** Column name X_Payroll_Bpjs_Rate_ID */
-    public static final String COLUMNNAME_X_Payroll_Bpjs_Rate_ID = "X_Payroll_Bpjs_Rate_ID";
-
-	/** Set BPJS Rate	  */
-	public void setX_Payroll_Bpjs_Rate_ID (int X_Payroll_Bpjs_Rate_ID);
-
-	/** Get BPJS Rate	  */
-	public int getX_Payroll_Bpjs_Rate_ID();
-
-    /** Column name employeerate */
-    public static final String COLUMNNAME_employeerate = "employeerate";
-
-	/** Set employeerate	  */
-	public void setemployeerate (BigDecimal employeerate);
-
-	/** Get employeerate	  */
-	public BigDecimal getemployeerate();
-
-    /** Column name employerrate */
-    public static final String COLUMNNAME_employerrate = "employerrate";
-
-	/** Set employerrate	  */
-	public void setemployerrate (BigDecimal employerrate);
-
-	/** Get employerrate	  */
-	public BigDecimal getemployerrate();
-
-    /** Column name isemployercontributiontaxable */
-    public static final String COLUMNNAME_isemployercontributiontaxable = "isemployercontributiontaxable";
-
-	/** Set isemployercontributiontaxable	  */
-	public void setisemployercontributiontaxable (boolean isemployercontributiontaxable);
-
-	/** Get isemployercontributiontaxable	  */
-	public boolean isemployercontributiontaxable();
-
-    /** Column name programtype */
-    public static final String COLUMNNAME_programtype = "programtype";
-
-	/** Set programtype	  */
-	public void setprogramtype (BigDecimal programtype);
-
-	/** Get programtype	  */
-	public BigDecimal getprogramtype();
-
-    /** Column name wagecaplower */
-    public static final String COLUMNNAME_wagecaplower = "wagecaplower";
-
-	/** Set wagecaplower	  */
-	public void setwagecaplower (BigDecimal wagecaplower);
-
-	/** Get wagecaplower	  */
-	public BigDecimal getwagecaplower();
-
-    /** Column name wagecapupper */
-    public static final String COLUMNNAME_wagecapupper = "wagecapupper";
-
-	/** Set wagecapupper	  */
-	public void setwagecapupper (BigDecimal wagecapupper);
-
-	/** Get wagecapupper	  */
-	public BigDecimal getwagecapupper();
+	@Deprecated(since="13") // use better methods with cache
+	public I_X_Payroll_Component getX_Payroll_Component() throws RuntimeException;
 }

@@ -31,7 +31,7 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_Component (Properties ctx, int X_Payroll_Component_ID, String trxName)
@@ -40,13 +40,13 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
       /** if (X_Payroll_Component_ID == 0)
         {
 			setComponentType (null);
-// CO
+// EARNING
+			setIsBPJSBase (false);
+// N
+			setIsTaxable (false);
+// N
 			setName (null);
 			setX_Payroll_Component_ID (0);
-			setisbpjsbase (false);
-// N
-			setistaxable (false);
-// N
         } */
     }
 
@@ -57,13 +57,13 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
       /** if (X_Payroll_Component_ID == 0)
         {
 			setComponentType (null);
-// CO
+// EARNING
+			setIsBPJSBase (false);
+// N
+			setIsTaxable (false);
+// N
 			setName (null);
 			setX_Payroll_Component_ID (0);
-			setisbpjsbase (false);
-// N
-			setistaxable (false);
-// N
         } */
     }
 
@@ -74,13 +74,13 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
       /** if (X_Payroll_Component_UU == null)
         {
 			setComponentType (null);
-// CO
+// EARNING
+			setIsBPJSBase (false);
+// N
+			setIsTaxable (false);
+// N
 			setName (null);
 			setX_Payroll_Component_ID (0);
-			setisbpjsbase (false);
-// N
-			setistaxable (false);
-// N
         } */
     }
 
@@ -91,13 +91,13 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
       /** if (X_Payroll_Component_UU == null)
         {
 			setComponentType (null);
-// CO
+// EARNING
+			setIsBPJSBase (false);
+// N
+			setIsTaxable (false);
+// N
 			setName (null);
 			setX_Payroll_Component_ID (0);
-			setisbpjsbase (false);
-// N
-			setistaxable (false);
-// N
         } */
     }
 
@@ -129,28 +129,12 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
       return sb.toString();
     }
 
-	/** ComponentType AD_Reference_ID=53225 */
-	public static final int COMPONENTTYPE_AD_Reference_ID=53225;
-	/** By-Product = BY */
-	public static final String COMPONENTTYPE_By_Product = "BY";
-	/** Component = CO */
-	public static final String COMPONENTTYPE_Component = "CO";
-	/** Co-Product = CP */
-	public static final String COMPONENTTYPE_Co_Product = "CP";
-	/** Option = OP */
-	public static final String COMPONENTTYPE_Option = "OP";
-	/** Phantom = PH */
-	public static final String COMPONENTTYPE_Phantom = "PH";
-	/** Packing = PK */
-	public static final String COMPONENTTYPE_Packing = "PK";
-	/** Planning = PL */
-	public static final String COMPONENTTYPE_Planning = "PL";
-	/** Tools = TL */
-	public static final String COMPONENTTYPE_Tools = "TL";
-	/** Variant = VA */
-	public static final String COMPONENTTYPE_Variant = "VA";
+	/** Deduction = DEDUCTION */
+	public static final String COMPONENTTYPE_Deduction = "DEDUCTION";
+	/** Earning = EARNING */
+	public static final String COMPONENTTYPE_Earning = "EARNING";
 	/** Set Component Type.
-		@param ComponentType Component Type for a Bill of Material or Formula
+		@param ComponentType Component Type for for Payroll
 	*/
 	public void setComponentType (String ComponentType)
 	{
@@ -159,11 +143,55 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
 	}
 
 	/** Get Component Type.
-		@return Component Type for a Bill of Material or Formula
+		@return Component Type for for Payroll
 	  */
 	public String getComponentType()
 	{
 		return (String)get_Value(COLUMNNAME_ComponentType);
+	}
+
+	/** Set IsBPJSBase.
+		@param IsBPJSBase IsBPJSBase
+	*/
+	public void setIsBPJSBase (boolean IsBPJSBase)
+	{
+		set_Value (COLUMNNAME_IsBPJSBase, Boolean.valueOf(IsBPJSBase));
+	}
+
+	/** Get IsBPJSBase.
+		@return IsBPJSBase	  */
+	public boolean isBPJSBase()
+	{
+		Object oo = get_Value(COLUMNNAME_IsBPJSBase);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set IsTaxable.
+		@param IsTaxable IsTaxable
+	*/
+	public void setIsTaxable (boolean IsTaxable)
+	{
+		set_Value (COLUMNNAME_IsTaxable, Boolean.valueOf(IsTaxable));
+	}
+
+	/** Get IsTaxable.
+		@return IsTaxable	  */
+	public boolean isTaxable()
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxable);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Name.
@@ -220,49 +248,5 @@ public class X_X_Payroll_Component extends PO implements I_X_Payroll_Component, 
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set isbpjsbase.
-		@param isbpjsbase isbpjsbase
-	*/
-	public void setisbpjsbase (boolean isbpjsbase)
-	{
-		set_Value (COLUMNNAME_isbpjsbase, Boolean.valueOf(isbpjsbase));
-	}
-
-	/** Get isbpjsbase.
-		@return isbpjsbase	  */
-	public boolean isbpjsbase()
-	{
-		Object oo = get_Value(COLUMNNAME_isbpjsbase);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
-	}
-
-	/** Set istaxable.
-		@param istaxable istaxable
-	*/
-	public void setistaxable (boolean istaxable)
-	{
-		set_Value (COLUMNNAME_istaxable, Boolean.valueOf(istaxable));
-	}
-
-	/** Get istaxable.
-		@return istaxable	  */
-	public boolean istaxable()
-	{
-		Object oo = get_Value(COLUMNNAME_istaxable);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
 	}
 }

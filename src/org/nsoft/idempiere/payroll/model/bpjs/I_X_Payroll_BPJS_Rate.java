@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for X_Payroll_EmployeeProgram
+/** Generated Interface for X_Payroll_BPJS_Rate
  *  @author iDempiere (generated) 
  *  @version Release 13
  */
 @SuppressWarnings("all")
-public interface I_X_Payroll_EmployeeProgram 
+public interface I_X_Payroll_BPJS_Rate 
 {
 
-    /** TableName=X_Payroll_EmployeeProgram */
-    public static final String Table_Name = "X_Payroll_EmployeeProgram";
+    /** TableName=X_Payroll_BPJS_Rate */
+    public static final String Table_Name = "X_Payroll_BPJS_Rate";
 
-    /** AD_Table_ID=1000015 */
+    /** AD_Table_ID=1000012 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -80,17 +80,23 @@ public interface I_X_Payroll_EmployeeProgram
 	  */
 	public int getCreatedBy();
 
-    /** Column name HR_Employee_ID */
-    public static final String COLUMNNAME_HR_Employee_ID = "HR_Employee_ID";
+    /** Column name EmployeeRate */
+    public static final String COLUMNNAME_EmployeeRate = "EmployeeRate";
 
-	/** Set Payroll Employee	  */
-	public void setHR_Employee_ID (int HR_Employee_ID);
+	/** Set Employee Rate	  */
+	public void setEmployeeRate (BigDecimal EmployeeRate);
 
-	/** Get Payroll Employee	  */
-	public int getHR_Employee_ID();
+	/** Get Employee Rate	  */
+	public BigDecimal getEmployeeRate();
 
-	@Deprecated(since="13") // use better methods with cache
-	public org.eevolution.model.I_HR_Employee getHR_Employee() throws RuntimeException;
+    /** Column name EmployerRate */
+    public static final String COLUMNNAME_EmployerRate = "EmployerRate";
+
+	/** Set Employer Rate	  */
+	public void setEmployerRate (BigDecimal EmployerRate);
+
+	/** Get Employer Rate	  */
+	public BigDecimal getEmployerRate();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -105,14 +111,14 @@ public interface I_X_Payroll_EmployeeProgram
 	  */
 	public boolean isActive();
 
-    /** Column name IsEnrolled */
-    public static final String COLUMNNAME_IsEnrolled = "IsEnrolled";
+    /** Column name IsEmployerContributionTaxable */
+    public static final String COLUMNNAME_IsEmployerContributionTaxable = "IsEmployerContributionTaxable";
 
-	/** Set IsEnrolled	  */
-	public void setIsEnrolled (boolean IsEnrolled);
+	/** Set Employer Contribution Taxable	  */
+	public void setIsEmployerContributionTaxable (boolean IsEmployerContributionTaxable);
 
-	/** Get IsEnrolled	  */
-	public boolean isEnrolled();
+	/** Get Employer Contribution Taxable	  */
+	public boolean isEmployerContributionTaxable();
 
     /** Column name ProgramType */
     public static final String COLUMNNAME_ProgramType = "ProgramType";
@@ -122,15 +128,6 @@ public interface I_X_Payroll_EmployeeProgram
 
 	/** Get Program Type	  */
 	public String getProgramType();
-
-    /** Column name Reason */
-    public static final String COLUMNNAME_Reason = "Reason";
-
-	/** Set Reason	  */
-	public void setReason (String Reason);
-
-	/** Get Reason	  */
-	public String getReason();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -174,12 +171,30 @@ public interface I_X_Payroll_EmployeeProgram
 	  */
 	public Timestamp getValidTo();
 
-    /** Column name X_Payroll_EmployeeProgram_ID */
-    public static final String COLUMNNAME_X_Payroll_EmployeeProgram_ID = "X_Payroll_EmployeeProgram_ID";
+    /** Column name WageCapLower */
+    public static final String COLUMNNAME_WageCapLower = "WageCapLower";
 
-	/** Set Payroll Employee Program	  */
-	public void setX_Payroll_EmployeeProgram_ID (int X_Payroll_EmployeeProgram_ID);
+	/** Set Wage Cap Lower	  */
+	public void setWageCapLower (BigDecimal WageCapLower);
 
-	/** Get Payroll Employee Program	  */
-	public int getX_Payroll_EmployeeProgram_ID();
+	/** Get Wage Cap Lower	  */
+	public BigDecimal getWageCapLower();
+
+    /** Column name WageCapUpper */
+    public static final String COLUMNNAME_WageCapUpper = "WageCapUpper";
+
+	/** Set Wage Cap Upper	  */
+	public void setWageCapUpper (BigDecimal WageCapUpper);
+
+	/** Get Wage Cap Upper	  */
+	public BigDecimal getWageCapUpper();
+
+    /** Column name X_Payroll_BPJS_Rate_ID */
+    public static final String COLUMNNAME_X_Payroll_BPJS_Rate_ID = "X_Payroll_BPJS_Rate_ID";
+
+	/** Set BPJS Rate ID	  */
+	public void setX_Payroll_BPJS_Rate_ID (int X_Payroll_BPJS_Rate_ID);
+
+	/** Get BPJS Rate ID	  */
+	public int getX_Payroll_BPJS_Rate_ID();
 }

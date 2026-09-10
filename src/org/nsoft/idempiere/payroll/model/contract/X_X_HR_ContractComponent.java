@@ -15,7 +15,7 @@
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
 /** Generated Model - DO NOT CHANGE */
-package org.nsoft.idempiere.payroll.model.component;
+package org.nsoft.idempiere.payroll.model.contract;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -23,11 +23,11 @@ import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
 
-/** Generated Model for X_Payroll_ComponentInput
+/** Generated Model for X_HR_ContractComponent
  *  @author iDempiere (generated)
  *  @version Release 13 - $Id$ */
-@org.adempiere.base.Model(table="X_Payroll_ComponentInput")
-public class X_X_Payroll_ComponentInput extends PO implements I_X_Payroll_ComponentInput, I_Persistent
+@org.adempiere.base.Model(table="X_HR_ContractComponent")
+public class X_X_HR_ContractComponent extends PO implements I_X_HR_ContractComponent, I_Persistent
 {
 
 	/**
@@ -36,63 +36,59 @@ public class X_X_Payroll_ComponentInput extends PO implements I_X_Payroll_Compon
 	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
-    public X_X_Payroll_ComponentInput (Properties ctx, int X_Payroll_ComponentInput_ID, String trxName)
+    public X_X_HR_ContractComponent (Properties ctx, int X_HR_ContractComponent_ID, String trxName)
     {
-      super (ctx, X_Payroll_ComponentInput_ID, trxName);
-      /** if (X_Payroll_ComponentInput_ID == 0)
+      super (ctx, X_HR_ContractComponent_ID, trxName);
+      /** if (X_HR_ContractComponent_ID == 0)
         {
 			setAmount (Env.ZERO);
-			setHR_Employee_ID (0);
-			setX_Payroll_ComponentInput_ID (0);
+			setHR_Contract_ID (0);
+			setX_HR_ContractComponent_ID (0);
 			setX_Payroll_Component_ID (0);
-			setX_Payroll_Period_ID (0);
         } */
     }
 
     /** Standard Constructor */
-    public X_X_Payroll_ComponentInput (Properties ctx, int X_Payroll_ComponentInput_ID, String trxName, String ... virtualColumns)
+    public X_X_HR_ContractComponent (Properties ctx, int X_HR_ContractComponent_ID, String trxName, String ... virtualColumns)
     {
-      super (ctx, X_Payroll_ComponentInput_ID, trxName, virtualColumns);
-      /** if (X_Payroll_ComponentInput_ID == 0)
+      super (ctx, X_HR_ContractComponent_ID, trxName, virtualColumns);
+      /** if (X_HR_ContractComponent_ID == 0)
         {
 			setAmount (Env.ZERO);
-			setHR_Employee_ID (0);
-			setX_Payroll_ComponentInput_ID (0);
+			setHR_Contract_ID (0);
+			setX_HR_ContractComponent_ID (0);
 			setX_Payroll_Component_ID (0);
-			setX_Payroll_Period_ID (0);
         } */
     }
 
     /** Standard Constructor */
-    public X_X_Payroll_ComponentInput (Properties ctx, String X_Payroll_ComponentInput_UU, String trxName)
+    public X_X_HR_ContractComponent (Properties ctx, String X_HR_ContractComponent_UU, String trxName)
     {
-      super (ctx, X_Payroll_ComponentInput_UU, trxName);
-      /** if (X_Payroll_ComponentInput_UU == null)
+      super (ctx, X_HR_ContractComponent_UU, trxName);
+      /** if (X_HR_ContractComponent_UU == null)
         {
 			setAmount (Env.ZERO);
-			setHR_Employee_ID (0);
-			setX_Payroll_ComponentInput_ID (0);
+			setHR_Contract_ID (0);
+			setX_HR_ContractComponent_ID (0);
 			setX_Payroll_Component_ID (0);
-			setX_Payroll_Period_ID (0);
         } */
     }
 
     /** Standard Constructor */
-    public X_X_Payroll_ComponentInput (Properties ctx, String X_Payroll_ComponentInput_UU, String trxName, String ... virtualColumns)
+    public X_X_HR_ContractComponent (Properties ctx, String X_HR_ContractComponent_UU, String trxName, String ... virtualColumns)
     {
-      super (ctx, X_Payroll_ComponentInput_UU, trxName, virtualColumns);
-      /** if (X_Payroll_ComponentInput_UU == null)
+      super (ctx, X_HR_ContractComponent_UU, trxName, virtualColumns);
+      /** if (X_HR_ContractComponent_UU == null)
         {
 			setAmount (Env.ZERO);
-			setHR_Employee_ID (0);
-			setX_Payroll_ComponentInput_ID (0);
+			setHR_Contract_ID (0);
+			setX_HR_ContractComponent_ID (0);
 			setX_Payroll_Component_ID (0);
-			setX_Payroll_Period_ID (0);
         } */
     }
 
     /** Load Constructor */
-    public X_X_Payroll_ComponentInput (Properties ctx, ResultSet rs, String trxName)
+    public X_X_HR_ContractComponent (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -114,7 +110,7 @@ public class X_X_Payroll_ComponentInput extends PO implements I_X_Payroll_Compon
 
     public String toString()
     {
-      StringBuilder sb = new StringBuilder ("X_X_Payroll_ComponentInput[")
+      StringBuilder sb = new StringBuilder ("X_X_HR_ContractComponent[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
@@ -139,49 +135,49 @@ public class X_X_Payroll_ComponentInput extends PO implements I_X_Payroll_Compon
 	}
 
 	@Deprecated(since="13") // use better methods with cache
-	public org.eevolution.model.I_HR_Employee getHR_Employee() throws RuntimeException
+	public org.eevolution.model.I_HR_Contract getHR_Contract() throws RuntimeException
 	{
-		return (org.eevolution.model.I_HR_Employee)MTable.get(getCtx(), org.eevolution.model.I_HR_Employee.Table_ID)
-			.getPO(getHR_Employee_ID(), get_TrxName());
+		return (org.eevolution.model.I_HR_Contract)MTable.get(getCtx(), org.eevolution.model.I_HR_Contract.Table_ID)
+			.getPO(getHR_Contract_ID(), get_TrxName());
 	}
 
-	/** Set Payroll Employee.
-		@param HR_Employee_ID Payroll Employee
+	/** Set Payroll Contract.
+		@param HR_Contract_ID Payroll Contract
 	*/
-	public void setHR_Employee_ID (int HR_Employee_ID)
+	public void setHR_Contract_ID (int HR_Contract_ID)
 	{
-		if (HR_Employee_ID < 1)
-			set_Value (COLUMNNAME_HR_Employee_ID, null);
+		if (HR_Contract_ID < 1)
+			set_ValueNoCheck (COLUMNNAME_HR_Contract_ID, null);
 		else
-			set_Value (COLUMNNAME_HR_Employee_ID, Integer.valueOf(HR_Employee_ID));
+			set_ValueNoCheck (COLUMNNAME_HR_Contract_ID, Integer.valueOf(HR_Contract_ID));
 	}
 
-	/** Get Payroll Employee.
-		@return Payroll Employee	  */
-	public int getHR_Employee_ID()
+	/** Get Payroll Contract.
+		@return Payroll Contract	  */
+	public int getHR_Contract_ID()
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_HR_Employee_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_HR_Contract_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set Payroll Component Input.
-		@param X_Payroll_ComponentInput_ID Payroll Component Input
+	/** Set HR Contract Component.
+		@param X_HR_ContractComponent_ID HR Contract Component
 	*/
-	public void setX_Payroll_ComponentInput_ID (int X_Payroll_ComponentInput_ID)
+	public void setX_HR_ContractComponent_ID (int X_HR_ContractComponent_ID)
 	{
-		if (X_Payroll_ComponentInput_ID < 1)
-			set_ValueNoCheck (COLUMNNAME_X_Payroll_ComponentInput_ID, null);
+		if (X_HR_ContractComponent_ID < 1)
+			set_ValueNoCheck (COLUMNNAME_X_HR_ContractComponent_ID, null);
 		else
-			set_ValueNoCheck (COLUMNNAME_X_Payroll_ComponentInput_ID, Integer.valueOf(X_Payroll_ComponentInput_ID));
+			set_ValueNoCheck (COLUMNNAME_X_HR_ContractComponent_ID, Integer.valueOf(X_HR_ContractComponent_ID));
 	}
 
-	/** Get Payroll Component Input.
-		@return Payroll Component Input	  */
-	public int getX_Payroll_ComponentInput_ID()
+	/** Get HR Contract Component.
+		@return HR Contract Component	  */
+	public int getX_HR_ContractComponent_ID()
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_X_Payroll_ComponentInput_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_X_HR_ContractComponent_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -210,34 +206,6 @@ public class X_X_Payroll_ComponentInput extends PO implements I_X_Payroll_Compon
 	public int getX_Payroll_Component_ID()
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_X_Payroll_Component_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
-
-	@Deprecated(since="13") // use better methods with cache
-	public I_X_Payroll_Period getX_Payroll_Period() throws RuntimeException
-	{
-		return (I_X_Payroll_Period)MTable.get(getCtx(), I_X_Payroll_Period.Table_ID)
-			.getPO(getX_Payroll_Period_ID(), get_TrxName());
-	}
-
-	/** Set Payroll ID.
-		@param X_Payroll_Period_ID Payroll ID
-	*/
-	public void setX_Payroll_Period_ID (int X_Payroll_Period_ID)
-	{
-		if (X_Payroll_Period_ID < 1)
-			set_Value (COLUMNNAME_X_Payroll_Period_ID, null);
-		else
-			set_Value (COLUMNNAME_X_Payroll_Period_ID, Integer.valueOf(X_Payroll_Period_ID));
-	}
-
-	/** Get Payroll ID.
-		@return Payroll ID	  */
-	public int getX_Payroll_Period_ID()
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_X_Payroll_Period_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -132,6 +132,24 @@ public interface I_X_Payroll_Period
 	  */
 	public boolean isActive();
 
+    /** Column name IsDecemberReconciliation */
+    public static final String COLUMNNAME_IsDecemberReconciliation = "IsDecemberReconciliation";
+
+	/** Set IsDecemberReconciliation	  */
+	public void setIsDecemberReconciliation (boolean IsDecemberReconciliation);
+
+	/** Get IsDecemberReconciliation	  */
+	public boolean isDecemberReconciliation();
+
+    /** Column name PeriodName */
+    public static final String COLUMNNAME_PeriodName = "PeriodName";
+
+	/** Set PeriodName	  */
+	public void setPeriodName (String PeriodName);
+
+	/** Get PeriodName	  */
+	public String getPeriodName();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
@@ -159,22 +177,4 @@ public interface I_X_Payroll_Period
 
 	@Deprecated(since="13") // use better methods with cache
 	public I_X_Payroll_Period getX_Payroll_Period() throws RuntimeException;
-
-    /** Column name isdecemberreconciliation */
-    public static final String COLUMNNAME_isdecemberreconciliation = "isdecemberreconciliation";
-
-	/** Set isdecemberreconciliation	  */
-	public void setisdecemberreconciliation (boolean isdecemberreconciliation);
-
-	/** Get isdecemberreconciliation	  */
-	public boolean isdecemberreconciliation();
-
-    /** Column name periodname */
-    public static final String COLUMNNAME_periodname = "periodname";
-
-	/** Set periodname	  */
-	public void setperiodname (String periodname);
-
-	/** Get periodname	  */
-	public String getperiodname();
 }

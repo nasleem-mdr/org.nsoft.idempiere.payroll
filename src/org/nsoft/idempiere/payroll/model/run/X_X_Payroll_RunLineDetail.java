@@ -33,7 +33,7 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_RunLineDetail (Properties ctx, int X_Payroll_RunLineDetail_ID, String trxName)
@@ -41,14 +41,14 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
       super (ctx, X_Payroll_RunLineDetail_ID, trxName);
       /** if (X_Payroll_RunLineDetail_ID == 0)
         {
+			setEmployeeAmount (Env.ZERO);
+			setEmployeeRateApplied (Env.ZERO);
+			setEmployerAmount (Env.ZERO);
+			setEmployerRateApplied (Env.ZERO);
+			setProgramType (null);
+			setWageBase (Env.ZERO);
 			setX_Payroll_RunLineDetail_ID (0);
 			setX_Payroll_RunLine_ID (0);
-			setemployeeamount (Env.ZERO);
-			setemployeerateapplied (Env.ZERO);
-			setemployeramount (Env.ZERO);
-			setemployerrateapplied (Env.ZERO);
-			setprogramtype (Env.ZERO);
-			setwagebase (Env.ZERO);
         } */
     }
 
@@ -58,14 +58,14 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
       super (ctx, X_Payroll_RunLineDetail_ID, trxName, virtualColumns);
       /** if (X_Payroll_RunLineDetail_ID == 0)
         {
+			setEmployeeAmount (Env.ZERO);
+			setEmployeeRateApplied (Env.ZERO);
+			setEmployerAmount (Env.ZERO);
+			setEmployerRateApplied (Env.ZERO);
+			setProgramType (null);
+			setWageBase (Env.ZERO);
 			setX_Payroll_RunLineDetail_ID (0);
 			setX_Payroll_RunLine_ID (0);
-			setemployeeamount (Env.ZERO);
-			setemployeerateapplied (Env.ZERO);
-			setemployeramount (Env.ZERO);
-			setemployerrateapplied (Env.ZERO);
-			setprogramtype (Env.ZERO);
-			setwagebase (Env.ZERO);
         } */
     }
 
@@ -75,14 +75,14 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
       super (ctx, X_Payroll_RunLineDetail_UU, trxName);
       /** if (X_Payroll_RunLineDetail_UU == null)
         {
+			setEmployeeAmount (Env.ZERO);
+			setEmployeeRateApplied (Env.ZERO);
+			setEmployerAmount (Env.ZERO);
+			setEmployerRateApplied (Env.ZERO);
+			setProgramType (null);
+			setWageBase (Env.ZERO);
 			setX_Payroll_RunLineDetail_ID (0);
 			setX_Payroll_RunLine_ID (0);
-			setemployeeamount (Env.ZERO);
-			setemployeerateapplied (Env.ZERO);
-			setemployeramount (Env.ZERO);
-			setemployerrateapplied (Env.ZERO);
-			setprogramtype (Env.ZERO);
-			setwagebase (Env.ZERO);
         } */
     }
 
@@ -92,14 +92,14 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
       super (ctx, X_Payroll_RunLineDetail_UU, trxName, virtualColumns);
       /** if (X_Payroll_RunLineDetail_UU == null)
         {
+			setEmployeeAmount (Env.ZERO);
+			setEmployeeRateApplied (Env.ZERO);
+			setEmployerAmount (Env.ZERO);
+			setEmployerRateApplied (Env.ZERO);
+			setProgramType (null);
+			setWageBase (Env.ZERO);
 			setX_Payroll_RunLineDetail_ID (0);
 			setX_Payroll_RunLine_ID (0);
-			setemployeeamount (Env.ZERO);
-			setemployeerateapplied (Env.ZERO);
-			setemployeramount (Env.ZERO);
-			setemployerrateapplied (Env.ZERO);
-			setprogramtype (Env.ZERO);
-			setwagebase (Env.ZERO);
         } */
     }
 
@@ -131,29 +131,134 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
       return sb.toString();
     }
 
-	@Deprecated(since="13") // use better methods with cache
-	public I_X_Payroll_Bpjs_Rate getX_Payroll_Bpjs_Rate() throws RuntimeException
+	/** Set EmployeeAmount.
+		@param EmployeeAmount EmployeeAmount
+	*/
+	public void setEmployeeAmount (BigDecimal EmployeeAmount)
 	{
-		return (I_X_Payroll_Bpjs_Rate)MTable.get(getCtx(), I_X_Payroll_Bpjs_Rate.Table_ID)
-			.getPO(getX_Payroll_Bpjs_Rate_ID(), get_TrxName());
+		set_Value (COLUMNNAME_EmployeeAmount, EmployeeAmount);
+	}
+
+	/** Get EmployeeAmount.
+		@return EmployeeAmount	  */
+	public BigDecimal getEmployeeAmount()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EmployeeAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set EmployeeRateApplied.
+		@param EmployeeRateApplied EmployeeRateApplied
+	*/
+	public void setEmployeeRateApplied (BigDecimal EmployeeRateApplied)
+	{
+		set_Value (COLUMNNAME_EmployeeRateApplied, EmployeeRateApplied);
+	}
+
+	/** Get EmployeeRateApplied.
+		@return EmployeeRateApplied	  */
+	public BigDecimal getEmployeeRateApplied()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EmployeeRateApplied);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set EmployerAmount.
+		@param EmployerAmount EmployerAmount
+	*/
+	public void setEmployerAmount (BigDecimal EmployerAmount)
+	{
+		set_Value (COLUMNNAME_EmployerAmount, EmployerAmount);
+	}
+
+	/** Get EmployerAmount.
+		@return EmployerAmount	  */
+	public BigDecimal getEmployerAmount()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EmployerAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set EmployerRateApplied.
+		@param EmployerRateApplied EmployerRateApplied
+	*/
+	public void setEmployerRateApplied (BigDecimal EmployerRateApplied)
+	{
+		set_Value (COLUMNNAME_EmployerRateApplied, EmployerRateApplied);
+	}
+
+	/** Get EmployerRateApplied.
+		@return EmployerRateApplied	  */
+	public BigDecimal getEmployerRateApplied()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EmployerRateApplied);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Program Type.
+		@param ProgramType Program Type
+	*/
+	public void setProgramType (String ProgramType)
+	{
+		set_Value (COLUMNNAME_ProgramType, ProgramType);
+	}
+
+	/** Get Program Type.
+		@return Program Type	  */
+	public String getProgramType()
+	{
+		return (String)get_Value(COLUMNNAME_ProgramType);
+	}
+
+	/** Set WageBase.
+		@param WageBase WageBase
+	*/
+	public void setWageBase (BigDecimal WageBase)
+	{
+		set_Value (COLUMNNAME_WageBase, WageBase);
+	}
+
+	/** Get WageBase.
+		@return WageBase	  */
+	public BigDecimal getWageBase()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WageBase);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	@Deprecated(since="13") // use better methods with cache
+	public I_X_Payroll_BPJS_Rate getX_Payroll_BPJS_Rate() throws RuntimeException
+	{
+		return (I_X_Payroll_BPJS_Rate)MTable.get(getCtx(), I_X_Payroll_BPJS_Rate.Table_ID)
+			.getPO(getX_Payroll_BPJS_Rate_ID(), get_TrxName());
 	}
 
 	/** Set BPJS Rate.
-		@param X_Payroll_Bpjs_Rate_ID BPJS Rate
+		@param X_Payroll_BPJS_Rate_ID BPJS Rate
 	*/
-	public void setX_Payroll_Bpjs_Rate_ID (int X_Payroll_Bpjs_Rate_ID)
+	public void setX_Payroll_BPJS_Rate_ID (int X_Payroll_BPJS_Rate_ID)
 	{
-		if (X_Payroll_Bpjs_Rate_ID < 1)
-			set_ValueNoCheck (COLUMNNAME_X_Payroll_Bpjs_Rate_ID, null);
+		if (X_Payroll_BPJS_Rate_ID < 1)
+			set_ValueNoCheck (COLUMNNAME_X_Payroll_BPJS_Rate_ID, null);
 		else
-			set_ValueNoCheck (COLUMNNAME_X_Payroll_Bpjs_Rate_ID, Integer.valueOf(X_Payroll_Bpjs_Rate_ID));
+			set_ValueNoCheck (COLUMNNAME_X_Payroll_BPJS_Rate_ID, Integer.valueOf(X_Payroll_BPJS_Rate_ID));
 	}
 
 	/** Get BPJS Rate.
 		@return BPJS Rate	  */
-	public int getX_Payroll_Bpjs_Rate_ID()
+	public int getX_Payroll_BPJS_Rate_ID()
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_X_Payroll_Bpjs_Rate_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_X_Payroll_BPJS_Rate_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -206,113 +311,5 @@ public class X_X_Payroll_RunLineDetail extends PO implements I_X_Payroll_RunLine
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set employeeamount.
-		@param employeeamount employeeamount
-	*/
-	public void setemployeeamount (BigDecimal employeeamount)
-	{
-		set_Value (COLUMNNAME_employeeamount, employeeamount);
-	}
-
-	/** Get employeeamount.
-		@return employeeamount	  */
-	public BigDecimal getemployeeamount()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_employeeamount);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set employeerateapplied.
-		@param employeerateapplied employeerateapplied
-	*/
-	public void setemployeerateapplied (BigDecimal employeerateapplied)
-	{
-		set_Value (COLUMNNAME_employeerateapplied, employeerateapplied);
-	}
-
-	/** Get employeerateapplied.
-		@return employeerateapplied	  */
-	public BigDecimal getemployeerateapplied()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_employeerateapplied);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set employeramount.
-		@param employeramount employeramount
-	*/
-	public void setemployeramount (BigDecimal employeramount)
-	{
-		set_Value (COLUMNNAME_employeramount, employeramount);
-	}
-
-	/** Get employeramount.
-		@return employeramount	  */
-	public BigDecimal getemployeramount()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_employeramount);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set employerrateapplied.
-		@param employerrateapplied employerrateapplied
-	*/
-	public void setemployerrateapplied (BigDecimal employerrateapplied)
-	{
-		set_Value (COLUMNNAME_employerrateapplied, employerrateapplied);
-	}
-
-	/** Get employerrateapplied.
-		@return employerrateapplied	  */
-	public BigDecimal getemployerrateapplied()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_employerrateapplied);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set programtype.
-		@param programtype programtype
-	*/
-	public void setprogramtype (BigDecimal programtype)
-	{
-		set_Value (COLUMNNAME_programtype, programtype);
-	}
-
-	/** Get programtype.
-		@return programtype	  */
-	public BigDecimal getprogramtype()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_programtype);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set wagebase.
-		@param wagebase wagebase
-	*/
-	public void setwagebase (BigDecimal wagebase)
-	{
-		set_Value (COLUMNNAME_wagebase, wagebase);
-	}
-
-	/** Get wagebase.
-		@return wagebase	  */
-	public BigDecimal getwagebase()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_wagebase);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
 	}
 }

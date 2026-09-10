@@ -17,6 +17,7 @@
 package org.nsoft.idempiere.payroll.model.run;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
@@ -41,4 +42,149 @@ public interface I_X_Payroll_Run
     BigDecimal accessLevel = BigDecimal.valueOf(4);
 
     /** Load Meta Data */
+
+    /** Column name AD_Client_ID */
+    public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
+
+	/** Get Tenant.
+	  * Tenant for this installation.
+	  */
+	public int getAD_Client_ID();
+
+    /** Column name AD_Org_ID */
+    public static final String COLUMNNAME_AD_Org_ID = "AD_Org_ID";
+
+	/** Set Organization.
+	  * Organizational entity within tenant
+	  */
+	public void setAD_Org_ID (int AD_Org_ID);
+
+	/** Get Organization.
+	  * Organizational entity within tenant
+	  */
+	public int getAD_Org_ID();
+
+    /** Column name Created */
+    public static final String COLUMNNAME_Created = "Created";
+
+	/** Get Created.
+	  * Date this record was created
+	  */
+	public Timestamp getCreated();
+
+    /** Column name CreatedBy */
+    public static final String COLUMNNAME_CreatedBy = "CreatedBy";
+
+	/** Get Created By.
+	  * User who created this records
+	  */
+	public int getCreatedBy();
+
+    /** Column name DocStatus */
+    public static final String COLUMNNAME_DocStatus = "DocStatus";
+
+	/** Set Document Status.
+	  * The current status of the document
+	  */
+	public void setDocStatus (String DocStatus);
+
+	/** Get Document Status.
+	  * The current status of the document
+	  */
+	public String getDocStatus();
+
+    /** Column name IsActive */
+    public static final String COLUMNNAME_IsActive = "IsActive";
+
+	/** Set Active.
+	  * The record is active in the system
+	  */
+	public void setIsActive (boolean IsActive);
+
+	/** Get Active.
+	  * The record is active in the system
+	  */
+	public boolean isActive();
+
+    /** Column name ProcessedDate */
+    public static final String COLUMNNAME_ProcessedDate = "ProcessedDate";
+
+	/** Set ProcessedDate	  */
+	public void setProcessedDate (Timestamp ProcessedDate);
+
+	/** Get ProcessedDate	  */
+	public Timestamp getProcessedDate();
+
+    /** Column name RunType */
+    public static final String COLUMNNAME_RunType = "RunType";
+
+	/** Set RunType	  */
+	public void setRunType (String RunType);
+
+	/** Get RunType	  */
+	public String getRunType();
+
+    /** Column name Updated */
+    public static final String COLUMNNAME_Updated = "Updated";
+
+	/** Get Updated.
+	  * Date this record was updated
+	  */
+	public Timestamp getUpdated();
+
+    /** Column name UpdatedBy */
+    public static final String COLUMNNAME_UpdatedBy = "UpdatedBy";
+
+	/** Get Updated By.
+	  * User who updated this records
+	  */
+	public int getUpdatedBy();
+
+    /** Column name VoidReason */
+    public static final String COLUMNNAME_VoidReason = "VoidReason";
+
+	/** Set VoidReason	  */
+	public void setVoidReason (String VoidReason);
+
+	/** Get VoidReason	  */
+	public String getVoidReason();
+
+    /** Column name VoidedBy */
+    public static final String COLUMNNAME_VoidedBy = "VoidedBy";
+
+	/** Set VoidedBy	  */
+	public void setVoidedBy (int VoidedBy);
+
+	/** Get VoidedBy	  */
+	public int getVoidedBy();
+
+    /** Column name VoidedDate */
+    public static final String COLUMNNAME_VoidedDate = "VoidedDate";
+
+	/** Set VoidedDate	  */
+	public void setVoidedDate (Timestamp VoidedDate);
+
+	/** Get VoidedDate	  */
+	public Timestamp getVoidedDate();
+
+    /** Column name X_Payroll_Period_ID */
+    public static final String COLUMNNAME_X_Payroll_Period_ID = "X_Payroll_Period_ID";
+
+	/** Set Payroll ID	  */
+	public void setX_Payroll_Period_ID (int X_Payroll_Period_ID);
+
+	/** Get Payroll ID	  */
+	public int getX_Payroll_Period_ID();
+
+	@Deprecated(since="13") // use better methods with cache
+	public I_X_Payroll_Period getX_Payroll_Period() throws RuntimeException;
+
+    /** Column name X_Payroll_Run_ID */
+    public static final String COLUMNNAME_X_Payroll_Run_ID = "X_Payroll_Run_ID";
+
+	/** Set Payroll Run ID	  */
+	public void setX_Payroll_Run_ID (int X_Payroll_Run_ID);
+
+	/** Get Payroll Run ID	  */
+	public int getX_Payroll_Run_ID();
 }

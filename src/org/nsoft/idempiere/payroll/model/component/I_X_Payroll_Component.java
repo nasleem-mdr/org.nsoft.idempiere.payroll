@@ -68,12 +68,12 @@ public interface I_X_Payroll_Component
     public static final String COLUMNNAME_ComponentType = "ComponentType";
 
 	/** Set Component Type.
-	  * Component Type for a Bill of Material or Formula
+	  * Component Type for for Payroll
 	  */
 	public void setComponentType (String ComponentType);
 
 	/** Get Component Type.
-	  * Component Type for a Bill of Material or Formula
+	  * Component Type for for Payroll
 	  */
 	public String getComponentType();
 
@@ -105,6 +105,24 @@ public interface I_X_Payroll_Component
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsBPJSBase */
+    public static final String COLUMNNAME_IsBPJSBase = "IsBPJSBase";
+
+	/** Set IsBPJSBase	  */
+	public void setIsBPJSBase (boolean IsBPJSBase);
+
+	/** Get IsBPJSBase	  */
+	public boolean isBPJSBase();
+
+    /** Column name IsTaxable */
+    public static final String COLUMNNAME_IsTaxable = "IsTaxable";
+
+	/** Set IsTaxable	  */
+	public void setIsTaxable (boolean IsTaxable);
+
+	/** Get IsTaxable	  */
+	public boolean isTaxable();
 
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
@@ -158,22 +176,4 @@ public interface I_X_Payroll_Component
 
 	/** Get Payroll Component	  */
 	public int getX_Payroll_Component_ID();
-
-    /** Column name isbpjsbase */
-    public static final String COLUMNNAME_isbpjsbase = "isbpjsbase";
-
-	/** Set isbpjsbase	  */
-	public void setisbpjsbase (boolean isbpjsbase);
-
-	/** Get isbpjsbase	  */
-	public boolean isbpjsbase();
-
-    /** Column name istaxable */
-    public static final String COLUMNNAME_istaxable = "istaxable";
-
-	/** Set istaxable	  */
-	public void setistaxable (boolean istaxable);
-
-	/** Get istaxable	  */
-	public boolean istaxable();
 }

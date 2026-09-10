@@ -89,6 +89,24 @@ public interface I_X_Payroll_TaxRate
 	  */
 	public int getCreatedBy();
 
+    /** Column name IncomeFrom */
+    public static final String COLUMNNAME_IncomeFrom = "IncomeFrom";
+
+	/** Set IncomeFrom	  */
+	public void setIncomeFrom (BigDecimal IncomeFrom);
+
+	/** Get IncomeFrom	  */
+	public BigDecimal getIncomeFrom();
+
+    /** Column name IncomeTo */
+    public static final String COLUMNNAME_IncomeTo = "IncomeTo";
+
+	/** Set IncomeTo	  */
+	public void setIncomeTo (BigDecimal IncomeTo);
+
+	/** Get IncomeTo	  */
+	public BigDecimal getIncomeTo();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -114,6 +132,15 @@ public interface I_X_Payroll_TaxRate
 	  * Rate or Tax or Exchange
 	  */
 	public BigDecimal getRate();
+
+    /** Column name SchemeType */
+    public static final String COLUMNNAME_SchemeType = "SchemeType";
+
+	/** Set SchemeType	  */
+	public void setSchemeType (String SchemeType);
+
+	/** Get SchemeType	  */
+	public String getSchemeType();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -165,31 +192,4 @@ public interface I_X_Payroll_TaxRate
 
 	/** Get Payroll Tax Rate	  */
 	public int getX_Payroll_TaxRate_ID();
-
-    /** Column name incomefrom */
-    public static final String COLUMNNAME_incomefrom = "incomefrom";
-
-	/** Set incomefrom	  */
-	public void setincomefrom (BigDecimal incomefrom);
-
-	/** Get incomefrom	  */
-	public BigDecimal getincomefrom();
-
-    /** Column name incometo */
-    public static final String COLUMNNAME_incometo = "incometo";
-
-	/** Set incometo	  */
-	public void setincometo (BigDecimal incometo);
-
-	/** Get incometo	  */
-	public BigDecimal getincometo();
-
-    /** Column name schemetype */
-    public static final String COLUMNNAME_schemetype = "schemetype";
-
-	/** Set schemetype	  */
-	public void setschemetype (String schemetype);
-
-	/** Get schemetype	  */
-	public String getschemetype();
 }

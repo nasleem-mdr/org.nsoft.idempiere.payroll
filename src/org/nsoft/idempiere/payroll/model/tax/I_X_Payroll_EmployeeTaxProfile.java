@@ -92,6 +92,15 @@ public interface I_X_Payroll_EmployeeTaxProfile
 	@Deprecated(since="13") // use better methods with cache
 	public org.eevolution.model.I_HR_Employee getHR_Employee() throws RuntimeException;
 
+    /** Column name HasNPWP */
+    public static final String COLUMNNAME_HasNPWP = "HasNPWP";
+
+	/** Set HasNPWP	  */
+	public void setHasNPWP (boolean HasNPWP);
+
+	/** Get HasNPWP	  */
+	public boolean isHasNPWP();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -104,6 +113,33 @@ public interface I_X_Payroll_EmployeeTaxProfile
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name Reason */
+    public static final String COLUMNNAME_Reason = "Reason";
+
+	/** Set Reason	  */
+	public void setReason (String Reason);
+
+	/** Get Reason	  */
+	public String getReason();
+
+    /** Column name SchemeType */
+    public static final String COLUMNNAME_SchemeType = "SchemeType";
+
+	/** Set SchemeType	  */
+	public void setSchemeType (String SchemeType);
+
+	/** Get SchemeType	  */
+	public String getSchemeType();
+
+    /** Column name TER_CategoryOverride */
+    public static final String COLUMNNAME_TER_CategoryOverride = "TER_CategoryOverride";
+
+	/** Set TER_CategoryOverride	  */
+	public void setTER_CategoryOverride (String TER_CategoryOverride);
+
+	/** Get TER_CategoryOverride	  */
+	public String getTER_CategoryOverride();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -155,40 +191,4 @@ public interface I_X_Payroll_EmployeeTaxProfile
 
 	/** Get Payroll Employee Program	  */
 	public int getX_Payroll_EmployeeTaxProfile_ID();
-
-    /** Column name hasnpwp */
-    public static final String COLUMNNAME_hasnpwp = "hasnpwp";
-
-	/** Set hasnpwp	  */
-	public void sethasnpwp (boolean hasnpwp);
-
-	/** Get hasnpwp	  */
-	public boolean ishasnpwp();
-
-    /** Column name reason */
-    public static final String COLUMNNAME_reason = "reason";
-
-	/** Set reason	  */
-	public void setreason (String reason);
-
-	/** Get reason	  */
-	public String getreason();
-
-    /** Column name schemetype */
-    public static final String COLUMNNAME_schemetype = "schemetype";
-
-	/** Set schemetype	  */
-	public void setschemetype (String schemetype);
-
-	/** Get schemetype	  */
-	public String getschemetype();
-
-    /** Column name ter_categoryoverride */
-    public static final String COLUMNNAME_ter_categoryoverride = "ter_categoryoverride";
-
-	/** Set ter_categoryoverride	  */
-	public void setter_categoryoverride (boolean ter_categoryoverride);
-
-	/** Get ter_categoryoverride	  */
-	public boolean ister_categoryoverride();
 }

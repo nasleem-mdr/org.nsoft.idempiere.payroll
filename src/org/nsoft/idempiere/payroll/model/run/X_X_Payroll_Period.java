@@ -32,7 +32,7 @@ public class X_X_Payroll_Period extends PO implements I_X_Payroll_Period, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_Period (Properties ctx, String X_Payroll_Period_UU, String trxName)
@@ -44,10 +44,10 @@ public class X_X_Payroll_Period extends PO implements I_X_Payroll_Period, I_Pers
 			setDateTo (new Timestamp( System.currentTimeMillis() ));
 			setDocStatus (null);
 // DR
-			setX_Payroll_Period_ID (0);
-			setisdecemberreconciliation (false);
+			setIsDecemberReconciliation (false);
 // N
-			setperiodname (null);
+			setPeriodName (null);
+			setX_Payroll_Period_ID (0);
         } */
     }
 
@@ -61,10 +61,10 @@ public class X_X_Payroll_Period extends PO implements I_X_Payroll_Period, I_Pers
 			setDateTo (new Timestamp( System.currentTimeMillis() ));
 			setDocStatus (null);
 // DR
-			setX_Payroll_Period_ID (0);
-			setisdecemberreconciliation (false);
+			setIsDecemberReconciliation (false);
 // N
-			setperiodname (null);
+			setPeriodName (null);
+			setX_Payroll_Period_ID (0);
         } */
     }
 
@@ -171,6 +171,43 @@ public class X_X_Payroll_Period extends PO implements I_X_Payroll_Period, I_Pers
 		return (String)get_Value(COLUMNNAME_DocStatus);
 	}
 
+	/** Set IsDecemberReconciliation.
+		@param IsDecemberReconciliation IsDecemberReconciliation
+	*/
+	public void setIsDecemberReconciliation (boolean IsDecemberReconciliation)
+	{
+		set_Value (COLUMNNAME_IsDecemberReconciliation, Boolean.valueOf(IsDecemberReconciliation));
+	}
+
+	/** Get IsDecemberReconciliation.
+		@return IsDecemberReconciliation	  */
+	public boolean isDecemberReconciliation()
+	{
+		Object oo = get_Value(COLUMNNAME_IsDecemberReconciliation);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set PeriodName.
+		@param PeriodName PeriodName
+	*/
+	public void setPeriodName (String PeriodName)
+	{
+		set_Value (COLUMNNAME_PeriodName, PeriodName);
+	}
+
+	/** Get PeriodName.
+		@return PeriodName	  */
+	public String getPeriodName()
+	{
+		return (String)get_Value(COLUMNNAME_PeriodName);
+	}
+
 	@Deprecated(since="13") // use better methods with cache
 	public I_X_Payroll_Period getX_Payroll_Period() throws RuntimeException
 	{
@@ -197,42 +234,5 @@ public class X_X_Payroll_Period extends PO implements I_X_Payroll_Period, I_Pers
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set isdecemberreconciliation.
-		@param isdecemberreconciliation isdecemberreconciliation
-	*/
-	public void setisdecemberreconciliation (boolean isdecemberreconciliation)
-	{
-		set_Value (COLUMNNAME_isdecemberreconciliation, Boolean.valueOf(isdecemberreconciliation));
-	}
-
-	/** Get isdecemberreconciliation.
-		@return isdecemberreconciliation	  */
-	public boolean isdecemberreconciliation()
-	{
-		Object oo = get_Value(COLUMNNAME_isdecemberreconciliation);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
-	}
-
-	/** Set periodname.
-		@param periodname periodname
-	*/
-	public void setperiodname (String periodname)
-	{
-		set_Value (COLUMNNAME_periodname, periodname);
-	}
-
-	/** Get periodname.
-		@return periodname	  */
-	public String getperiodname()
-	{
-		return (String)get_Value(COLUMNNAME_periodname);
 	}
 }

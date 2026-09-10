@@ -32,7 +32,7 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_EmployeeTaxProfile (Properties ctx, int X_Payroll_EmployeeTaxProfile_ID, String trxName)
@@ -41,13 +41,12 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
       /** if (X_Payroll_EmployeeTaxProfile_ID == 0)
         {
 			setHR_Employee_ID (0);
+			setHasNPWP (false);
+// N
+			setSchemeType (null);
+			setTER_CategoryOverride (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeTaxProfile_ID (0);
-			sethasnpwp (false);
-// N
-			setschemetype (null);
-			setter_categoryoverride (false);
-// N
         } */
     }
 
@@ -58,13 +57,12 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
       /** if (X_Payroll_EmployeeTaxProfile_ID == 0)
         {
 			setHR_Employee_ID (0);
+			setHasNPWP (false);
+// N
+			setSchemeType (null);
+			setTER_CategoryOverride (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeTaxProfile_ID (0);
-			sethasnpwp (false);
-// N
-			setschemetype (null);
-			setter_categoryoverride (false);
-// N
         } */
     }
 
@@ -75,13 +73,12 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
       /** if (X_Payroll_EmployeeTaxProfile_UU == null)
         {
 			setHR_Employee_ID (0);
+			setHasNPWP (false);
+// N
+			setSchemeType (null);
+			setTER_CategoryOverride (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeTaxProfile_ID (0);
-			sethasnpwp (false);
-// N
-			setschemetype (null);
-			setter_categoryoverride (false);
-// N
         } */
     }
 
@@ -92,13 +89,12 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
       /** if (X_Payroll_EmployeeTaxProfile_UU == null)
         {
 			setHR_Employee_ID (0);
+			setHasNPWP (false);
+// N
+			setSchemeType (null);
+			setTER_CategoryOverride (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeTaxProfile_ID (0);
-			sethasnpwp (false);
-// N
-			setschemetype (null);
-			setter_categoryoverride (false);
-// N
         } */
     }
 
@@ -158,6 +154,73 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
 		return ii.intValue();
 	}
 
+	/** Set HasNPWP.
+		@param HasNPWP HasNPWP
+	*/
+	public void setHasNPWP (boolean HasNPWP)
+	{
+		set_Value (COLUMNNAME_HasNPWP, Boolean.valueOf(HasNPWP));
+	}
+
+	/** Get HasNPWP.
+		@return HasNPWP	  */
+	public boolean isHasNPWP()
+	{
+		Object oo = get_Value(COLUMNNAME_HasNPWP);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Reason.
+		@param Reason Reason
+	*/
+	public void setReason (String Reason)
+	{
+		set_Value (COLUMNNAME_Reason, Reason);
+	}
+
+	/** Get Reason.
+		@return Reason	  */
+	public String getReason()
+	{
+		return (String)get_Value(COLUMNNAME_Reason);
+	}
+
+	/** Set SchemeType.
+		@param SchemeType SchemeType
+	*/
+	public void setSchemeType (String SchemeType)
+	{
+		set_Value (COLUMNNAME_SchemeType, SchemeType);
+	}
+
+	/** Get SchemeType.
+		@return SchemeType	  */
+	public String getSchemeType()
+	{
+		return (String)get_Value(COLUMNNAME_SchemeType);
+	}
+
+	/** Set TER_CategoryOverride.
+		@param TER_CategoryOverride TER_CategoryOverride
+	*/
+	public void setTER_CategoryOverride (String TER_CategoryOverride)
+	{
+		set_Value (COLUMNNAME_TER_CategoryOverride, TER_CategoryOverride);
+	}
+
+	/** Get TER_CategoryOverride.
+		@return TER_CategoryOverride	  */
+	public String getTER_CategoryOverride()
+	{
+		return (String)get_Value(COLUMNNAME_TER_CategoryOverride);
+	}
+
 	/** Set Valid from.
 		@param ValidFrom Valid from including this date (first day)
 	*/
@@ -209,79 +272,5 @@ public class X_X_Payroll_EmployeeTaxProfile extends PO implements I_X_Payroll_Em
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set hasnpwp.
-		@param hasnpwp hasnpwp
-	*/
-	public void sethasnpwp (boolean hasnpwp)
-	{
-		set_Value (COLUMNNAME_hasnpwp, Boolean.valueOf(hasnpwp));
-	}
-
-	/** Get hasnpwp.
-		@return hasnpwp	  */
-	public boolean ishasnpwp()
-	{
-		Object oo = get_Value(COLUMNNAME_hasnpwp);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
-	}
-
-	/** Set reason.
-		@param reason reason
-	*/
-	public void setreason (String reason)
-	{
-		set_Value (COLUMNNAME_reason, reason);
-	}
-
-	/** Get reason.
-		@return reason	  */
-	public String getreason()
-	{
-		return (String)get_Value(COLUMNNAME_reason);
-	}
-
-	/** Set schemetype.
-		@param schemetype schemetype
-	*/
-	public void setschemetype (String schemetype)
-	{
-		set_Value (COLUMNNAME_schemetype, schemetype);
-	}
-
-	/** Get schemetype.
-		@return schemetype	  */
-	public String getschemetype()
-	{
-		return (String)get_Value(COLUMNNAME_schemetype);
-	}
-
-	/** Set ter_categoryoverride.
-		@param ter_categoryoverride ter_categoryoverride
-	*/
-	public void setter_categoryoverride (boolean ter_categoryoverride)
-	{
-		set_Value (COLUMNNAME_ter_categoryoverride, Boolean.valueOf(ter_categoryoverride));
-	}
-
-	/** Get ter_categoryoverride.
-		@return ter_categoryoverride	  */
-	public boolean ister_categoryoverride()
-	{
-		Object oo = get_Value(COLUMNNAME_ter_categoryoverride);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
 	}
 }

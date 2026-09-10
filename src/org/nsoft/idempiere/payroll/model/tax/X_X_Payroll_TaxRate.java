@@ -34,7 +34,7 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_TaxRate (Properties ctx, int X_Payroll_TaxRate_ID, String trxName)
@@ -42,11 +42,11 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
       super (ctx, X_Payroll_TaxRate_ID, trxName);
       /** if (X_Payroll_TaxRate_ID == 0)
         {
+			setIncomeFrom (Env.ZERO);
 			setRate (Env.ZERO);
+			setSchemeType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_TaxRate_ID (0);
-			setincomefrom (Env.ZERO);
-			setschemetype (null);
         } */
     }
 
@@ -56,11 +56,11 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
       super (ctx, X_Payroll_TaxRate_ID, trxName, virtualColumns);
       /** if (X_Payroll_TaxRate_ID == 0)
         {
+			setIncomeFrom (Env.ZERO);
 			setRate (Env.ZERO);
+			setSchemeType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_TaxRate_ID (0);
-			setincomefrom (Env.ZERO);
-			setschemetype (null);
         } */
     }
 
@@ -70,11 +70,11 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
       super (ctx, X_Payroll_TaxRate_UU, trxName);
       /** if (X_Payroll_TaxRate_UU == null)
         {
+			setIncomeFrom (Env.ZERO);
 			setRate (Env.ZERO);
+			setSchemeType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_TaxRate_ID (0);
-			setincomefrom (Env.ZERO);
-			setschemetype (null);
         } */
     }
 
@@ -84,11 +84,11 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
       super (ctx, X_Payroll_TaxRate_UU, trxName, virtualColumns);
       /** if (X_Payroll_TaxRate_UU == null)
         {
+			setIncomeFrom (Env.ZERO);
 			setRate (Env.ZERO);
+			setSchemeType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_TaxRate_ID (0);
-			setincomefrom (Env.ZERO);
-			setschemetype (null);
         } */
     }
 
@@ -135,6 +135,42 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
 		return (String)get_Value(COLUMNNAME_Category);
 	}
 
+	/** Set IncomeFrom.
+		@param IncomeFrom IncomeFrom
+	*/
+	public void setIncomeFrom (BigDecimal IncomeFrom)
+	{
+		set_Value (COLUMNNAME_IncomeFrom, IncomeFrom);
+	}
+
+	/** Get IncomeFrom.
+		@return IncomeFrom	  */
+	public BigDecimal getIncomeFrom()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_IncomeFrom);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set IncomeTo.
+		@param IncomeTo IncomeTo
+	*/
+	public void setIncomeTo (BigDecimal IncomeTo)
+	{
+		set_Value (COLUMNNAME_IncomeTo, IncomeTo);
+	}
+
+	/** Get IncomeTo.
+		@return IncomeTo	  */
+	public BigDecimal getIncomeTo()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_IncomeTo);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Rate.
 		@param Rate Rate or Tax or Exchange
 	*/
@@ -152,6 +188,21 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set SchemeType.
+		@param SchemeType SchemeType
+	*/
+	public void setSchemeType (String SchemeType)
+	{
+		set_Value (COLUMNNAME_SchemeType, SchemeType);
+	}
+
+	/** Get SchemeType.
+		@return SchemeType	  */
+	public String getSchemeType()
+	{
+		return (String)get_Value(COLUMNNAME_SchemeType);
 	}
 
 	/** Set Valid from.
@@ -205,56 +256,5 @@ public class X_X_Payroll_TaxRate extends PO implements I_X_Payroll_TaxRate, I_Pe
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set incomefrom.
-		@param incomefrom incomefrom
-	*/
-	public void setincomefrom (BigDecimal incomefrom)
-	{
-		set_Value (COLUMNNAME_incomefrom, incomefrom);
-	}
-
-	/** Get incomefrom.
-		@return incomefrom	  */
-	public BigDecimal getincomefrom()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_incomefrom);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set incometo.
-		@param incometo incometo
-	*/
-	public void setincometo (BigDecimal incometo)
-	{
-		set_Value (COLUMNNAME_incometo, incometo);
-	}
-
-	/** Get incometo.
-		@return incometo	  */
-	public BigDecimal getincometo()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_incometo);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set schemetype.
-		@param schemetype schemetype
-	*/
-	public void setschemetype (String schemetype)
-	{
-		set_Value (COLUMNNAME_schemetype, schemetype);
-	}
-
-	/** Get schemetype.
-		@return schemetype	  */
-	public String getschemetype()
-	{
-		return (String)get_Value(COLUMNNAME_schemetype);
 	}
 }

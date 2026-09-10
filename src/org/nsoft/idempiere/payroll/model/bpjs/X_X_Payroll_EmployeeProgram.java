@@ -17,12 +17,10 @@
 /** Generated Model - DO NOT CHANGE */
 package org.nsoft.idempiere.payroll.model.bpjs;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
-import org.compiere.util.Env;
 
 /** Generated Model for X_Payroll_EmployeeProgram
  *  @author iDempiere (generated)
@@ -34,7 +32,7 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_EmployeeProgram (Properties ctx, int X_Payroll_EmployeeProgram_ID, String trxName)
@@ -43,11 +41,11 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
       /** if (X_Payroll_EmployeeProgram_ID == 0)
         {
 			setHR_Employee_ID (0);
+			setIsEnrolled (false);
+// N
+			setProgramType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeProgram_ID (0);
-			setisenrolled (false);
-// N
-			setprogramtype (Env.ZERO);
         } */
     }
 
@@ -58,11 +56,11 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
       /** if (X_Payroll_EmployeeProgram_ID == 0)
         {
 			setHR_Employee_ID (0);
+			setIsEnrolled (false);
+// N
+			setProgramType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeProgram_ID (0);
-			setisenrolled (false);
-// N
-			setprogramtype (Env.ZERO);
         } */
     }
 
@@ -73,11 +71,11 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
       /** if (X_Payroll_EmployeeProgram_UU == null)
         {
 			setHR_Employee_ID (0);
+			setIsEnrolled (false);
+// N
+			setProgramType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeProgram_ID (0);
-			setisenrolled (false);
-// N
-			setprogramtype (Env.ZERO);
         } */
     }
 
@@ -88,11 +86,11 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
       /** if (X_Payroll_EmployeeProgram_UU == null)
         {
 			setHR_Employee_ID (0);
+			setIsEnrolled (false);
+// N
+			setProgramType (null);
 			setValidFrom (new Timestamp( System.currentTimeMillis() ));
 			setX_Payroll_EmployeeProgram_ID (0);
-			setisenrolled (false);
-// N
-			setprogramtype (Env.ZERO);
         } */
     }
 
@@ -152,6 +150,58 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
 		return ii.intValue();
 	}
 
+	/** Set IsEnrolled.
+		@param IsEnrolled IsEnrolled
+	*/
+	public void setIsEnrolled (boolean IsEnrolled)
+	{
+		set_Value (COLUMNNAME_IsEnrolled, Boolean.valueOf(IsEnrolled));
+	}
+
+	/** Get IsEnrolled.
+		@return IsEnrolled	  */
+	public boolean isEnrolled()
+	{
+		Object oo = get_Value(COLUMNNAME_IsEnrolled);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Program Type.
+		@param ProgramType Program Type
+	*/
+	public void setProgramType (String ProgramType)
+	{
+		set_Value (COLUMNNAME_ProgramType, ProgramType);
+	}
+
+	/** Get Program Type.
+		@return Program Type	  */
+	public String getProgramType()
+	{
+		return (String)get_Value(COLUMNNAME_ProgramType);
+	}
+
+	/** Set Reason.
+		@param Reason Reason
+	*/
+	public void setReason (String Reason)
+	{
+		set_Value (COLUMNNAME_Reason, Reason);
+	}
+
+	/** Get Reason.
+		@return Reason	  */
+	public String getReason()
+	{
+		return (String)get_Value(COLUMNNAME_Reason);
+	}
+
 	/** Set Valid from.
 		@param ValidFrom Valid from including this date (first day)
 	*/
@@ -203,60 +253,5 @@ public class X_X_Payroll_EmployeeProgram extends PO implements I_X_Payroll_Emplo
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set isenrolled.
-		@param isenrolled isenrolled
-	*/
-	public void setisenrolled (boolean isenrolled)
-	{
-		set_Value (COLUMNNAME_isenrolled, Boolean.valueOf(isenrolled));
-	}
-
-	/** Get isenrolled.
-		@return isenrolled	  */
-	public boolean isenrolled()
-	{
-		Object oo = get_Value(COLUMNNAME_isenrolled);
-		if (oo != null)
-		{
-			 if (oo instanceof Boolean)
-				 return ((Boolean)oo).booleanValue();
-			return "Y".equals(oo);
-		}
-		return false;
-	}
-
-	/** Set programtype.
-		@param programtype programtype
-	*/
-	public void setprogramtype (BigDecimal programtype)
-	{
-		set_Value (COLUMNNAME_programtype, programtype);
-	}
-
-	/** Get programtype.
-		@return programtype	  */
-	public BigDecimal getprogramtype()
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_programtype);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set reason.
-		@param reason reason
-	*/
-	public void setreason (String reason)
-	{
-		set_Value (COLUMNNAME_reason, reason);
-	}
-
-	/** Get reason.
-		@return reason	  */
-	public String getreason()
-	{
-		return (String)get_Value(COLUMNNAME_reason);
 	}
 }

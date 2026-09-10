@@ -80,6 +80,42 @@ public interface I_X_Payroll_RunLineDetail
 	  */
 	public int getCreatedBy();
 
+    /** Column name EmployeeAmount */
+    public static final String COLUMNNAME_EmployeeAmount = "EmployeeAmount";
+
+	/** Set EmployeeAmount	  */
+	public void setEmployeeAmount (BigDecimal EmployeeAmount);
+
+	/** Get EmployeeAmount	  */
+	public BigDecimal getEmployeeAmount();
+
+    /** Column name EmployeeRateApplied */
+    public static final String COLUMNNAME_EmployeeRateApplied = "EmployeeRateApplied";
+
+	/** Set EmployeeRateApplied	  */
+	public void setEmployeeRateApplied (BigDecimal EmployeeRateApplied);
+
+	/** Get EmployeeRateApplied	  */
+	public BigDecimal getEmployeeRateApplied();
+
+    /** Column name EmployerAmount */
+    public static final String COLUMNNAME_EmployerAmount = "EmployerAmount";
+
+	/** Set EmployerAmount	  */
+	public void setEmployerAmount (BigDecimal EmployerAmount);
+
+	/** Get EmployerAmount	  */
+	public BigDecimal getEmployerAmount();
+
+    /** Column name EmployerRateApplied */
+    public static final String COLUMNNAME_EmployerRateApplied = "EmployerRateApplied";
+
+	/** Set EmployerRateApplied	  */
+	public void setEmployerRateApplied (BigDecimal EmployerRateApplied);
+
+	/** Get EmployerRateApplied	  */
+	public BigDecimal getEmployerRateApplied();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -92,6 +128,15 @@ public interface I_X_Payroll_RunLineDetail
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name ProgramType */
+    public static final String COLUMNNAME_ProgramType = "ProgramType";
+
+	/** Set Program Type	  */
+	public void setProgramType (String ProgramType);
+
+	/** Get Program Type	  */
+	public String getProgramType();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -109,17 +154,26 @@ public interface I_X_Payroll_RunLineDetail
 	  */
 	public int getUpdatedBy();
 
-    /** Column name X_Payroll_Bpjs_Rate_ID */
-    public static final String COLUMNNAME_X_Payroll_Bpjs_Rate_ID = "X_Payroll_Bpjs_Rate_ID";
+    /** Column name WageBase */
+    public static final String COLUMNNAME_WageBase = "WageBase";
+
+	/** Set WageBase	  */
+	public void setWageBase (BigDecimal WageBase);
+
+	/** Get WageBase	  */
+	public BigDecimal getWageBase();
+
+    /** Column name X_Payroll_BPJS_Rate_ID */
+    public static final String COLUMNNAME_X_Payroll_BPJS_Rate_ID = "X_Payroll_BPJS_Rate_ID";
 
 	/** Set BPJS Rate	  */
-	public void setX_Payroll_Bpjs_Rate_ID (int X_Payroll_Bpjs_Rate_ID);
+	public void setX_Payroll_BPJS_Rate_ID (int X_Payroll_BPJS_Rate_ID);
 
 	/** Get BPJS Rate	  */
-	public int getX_Payroll_Bpjs_Rate_ID();
+	public int getX_Payroll_BPJS_Rate_ID();
 
 	@Deprecated(since="13") // use better methods with cache
-	public I_X_Payroll_Bpjs_Rate getX_Payroll_Bpjs_Rate() throws RuntimeException;
+	public I_X_Payroll_BPJS_Rate getX_Payroll_BPJS_Rate() throws RuntimeException;
 
     /** Column name X_Payroll_RunLineDetail_ID */
     public static final String COLUMNNAME_X_Payroll_RunLineDetail_ID = "X_Payroll_RunLineDetail_ID";
@@ -141,58 +195,4 @@ public interface I_X_Payroll_RunLineDetail
 
 	@Deprecated(since="13") // use better methods with cache
 	public I_X_Payroll_RunLine getX_Payroll_RunLine() throws RuntimeException;
-
-    /** Column name employeeamount */
-    public static final String COLUMNNAME_employeeamount = "employeeamount";
-
-	/** Set employeeamount	  */
-	public void setemployeeamount (BigDecimal employeeamount);
-
-	/** Get employeeamount	  */
-	public BigDecimal getemployeeamount();
-
-    /** Column name employeerateapplied */
-    public static final String COLUMNNAME_employeerateapplied = "employeerateapplied";
-
-	/** Set employeerateapplied	  */
-	public void setemployeerateapplied (BigDecimal employeerateapplied);
-
-	/** Get employeerateapplied	  */
-	public BigDecimal getemployeerateapplied();
-
-    /** Column name employeramount */
-    public static final String COLUMNNAME_employeramount = "employeramount";
-
-	/** Set employeramount	  */
-	public void setemployeramount (BigDecimal employeramount);
-
-	/** Get employeramount	  */
-	public BigDecimal getemployeramount();
-
-    /** Column name employerrateapplied */
-    public static final String COLUMNNAME_employerrateapplied = "employerrateapplied";
-
-	/** Set employerrateapplied	  */
-	public void setemployerrateapplied (BigDecimal employerrateapplied);
-
-	/** Get employerrateapplied	  */
-	public BigDecimal getemployerrateapplied();
-
-    /** Column name programtype */
-    public static final String COLUMNNAME_programtype = "programtype";
-
-	/** Set programtype	  */
-	public void setprogramtype (BigDecimal programtype);
-
-	/** Get programtype	  */
-	public BigDecimal getprogramtype();
-
-    /** Column name wagebase */
-    public static final String COLUMNNAME_wagebase = "wagebase";
-
-	/** Set wagebase	  */
-	public void setwagebase (BigDecimal wagebase);
-
-	/** Get wagebase	  */
-	public BigDecimal getwagebase();
 }

@@ -33,7 +33,7 @@ public class X_X_Payroll_RunLineComponent extends PO implements I_X_Payroll_RunL
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20260909L;
+	private static final long serialVersionUID = 20260910L;
 
     /** Standard Constructor */
     public X_X_Payroll_RunLineComponent (Properties ctx, int X_Payroll_RunLineComponent_ID, String trxName)
