@@ -16,4 +16,4 @@ Export-Package: org.nsoft.idempiere.payroll.model.run,
  org.nsoft.idempiere.payroll.model.contract,
  org.nsoft.idempiere.payroll.process,
  org.nsoft.idempiere.payroll.calc 
-  
+ 
