@@ -331,17 +331,14 @@ public class GeneratePayrollRun extends SvrProcess {
         boolean isTaxable, isBpjsBase;
         BigDecimal amount;
     }
-    private List<Integer> getActiveEmployeeIds(String trxName) {
-        // Filter StartDate/EndDate SELAIN IsActive — employee yang sudah
-        // lewat EndDate tidak boleh ikut payroll run walau IsActive masih 'Y'
-        // (data administratif kadang telat di-update saat resign).
+    private List<Integer> getActiveEmployeeIds(PeriodInfo period, String trxName) {
         List<Integer> ids = new ArrayList<>();
         String sql = "SELECT HR_Employee_ID FROM HR_Employee " +
             "WHERE IsActive='Y' " +
             "AND StartDate <= ? " +
             "AND (EndDate IS NULL OR EndDate >= ?)";
         try (PreparedStatement pstmt = DB.prepareStatement(sql, trxName)) {
-            pstmt.setTimestamp(1, period.dateTo);   // perlu period diteruskan ke method ini
+            pstmt.setTimestamp(1, period.dateTo);
             pstmt.setTimestamp(2, period.dateFrom);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) ids.add(rs.getInt(1));
@@ -350,8 +347,7 @@ public class GeneratePayrollRun extends SvrProcess {
             throw new RuntimeException("Gagal load daftar employee aktif: " + e.getMessage(), e);
         }
         return ids;
-    }
-   
+    }  
     private EmployeeSnapshot loadEmployeeSnapshot(int employeeId, String trxName) {
         String sql = "SELECT X_TER_Category, X_PTKPStatus, X_NPWP FROM HR_Employee WHERE HR_Employee_ID=?";
         EmployeeSnapshot snap = new EmployeeSnapshot();
