@@ -122,7 +122,7 @@ public class GeneratePayrollRun extends SvrProcess {
             period.dateFrom, trxName);
 
         // ── 5. Loop tiap employee aktif ────────────────────────────────
-        List<Integer> employeeIds = getActiveEmployeeIds(trxName);
+        List<Integer> employeeIds = getActiveEmployeeIds(period, trxName);
         int processedCount = 0;
 
         for (int employeeId : employeeIds) {
